@@ -19,19 +19,19 @@
   <meta name="author" content="hejiaman">
   <meta name="keywords" content="">
   
-    <meta name="description" content="《大规模语言模型理论与实践》第二版：原书资料链接🔗  RAG系统框架RAG核心在于将外部检索与生成模块有机整合，通过动态引入外部知识来提升生成结果的准确性和可靠性。       RAG任务分级根据任务认知处理层次划分，可分为显性事实查询（Explicit Facts Query）、隐性事实查询（Implicit Facts Query）、可解释推理查询（Interpretable Ration">
+    <meta name="description" content="《大规模语言模型理论与实践》第二版：原书资料链接🔗  RAG系统框架RAG核心在于将外部检索与生成模块有机整合，通过动态引入外部知识来提升生成结果的准确性和可靠性。    RAG任务分级根据任务认知处理层次划分，可分为显性事实查询（Explicit Facts Query）、隐性事实查询（Implicit Facts Query）、可解释推理查询（Interpretable Rationale">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《大规模语言模型理论与实践》RAG章节笔记">
 <meta property="og:url" content="http://example.com/2025/08/21/%E3%80%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E8%B7%B5%E3%80%8BRAG%E7%AB%A0%E8%8A%82%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="Barbara">
-<meta property="og:description" content="《大规模语言模型理论与实践》第二版：原书资料链接🔗  RAG系统框架RAG核心在于将外部检索与生成模块有机整合，通过动态引入外部知识来提升生成结果的准确性和可靠性。       RAG任务分级根据任务认知处理层次划分，可分为显性事实查询（Explicit Facts Query）、隐性事实查询（Implicit Facts Query）、可解释推理查询（Interpretable Ration">
+<meta property="og:description" content="《大规模语言模型理论与实践》第二版：原书资料链接🔗  RAG系统框架RAG核心在于将外部检索与生成模块有机整合，通过动态引入外部知识来提升生成结果的准确性和可靠性。    RAG任务分级根据任务认知处理层次划分，可分为显性事实查询（Explicit Facts Query）、隐性事实查询（Implicit Facts Query）、可解释推理查询（Interpretable Rationale">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/%E3%80%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E8%B7%B5%E3%80%8BRAG%E7%AB%A0%E8%8A%82%E7%AC%94%E8%AE%B0/rag_frame.png">
+<meta property="og:image" content="http://example.com/2025/08/21/%E3%80%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E8%B7%B5%E3%80%8BRAG%E7%AB%A0%E8%8A%82%E7%AC%94%E8%AE%B0/rag_frame.png">
 <meta property="article:published_time" content="2025-08-21T08:10:31.000Z">
-<meta property="article:modified_time" content="2025-08-21T08:32:04.380Z">
+<meta property="article:modified_time" content="2025-08-21T08:36:54.170Z">
 <meta property="article:author" content="hejiaman">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/%E3%80%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E8%B7%B5%E3%80%8BRAG%E7%AB%A0%E8%8A%82%E7%AC%94%E8%AE%B0/rag_frame.png">
+<meta name="twitter:image" content="http://example.com/2025/08/21/%E3%80%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E8%B7%B5%E3%80%8BRAG%E7%AB%A0%E8%8A%82%E7%AC%94%E8%AE%B0/rag_frame.png">
   
   
   
@@ -281,10 +281,7 @@
 <p>《大规模语言模型理论与实践》第二版：<a target="_blank" rel="noopener" href="https://intro-llm.github.io/">原书资料链接🔗</a></p>
 </blockquote>
 <h2 id="RAG系统框架"><a href="#RAG系统框架" class="headerlink" title="RAG系统框架"></a>RAG系统框架</h2><p>RAG核心在于将<strong>外部检索</strong>与<strong>生成模块</strong>有机整合，通过动态引入外部知识来提升生成结果的准确性和可靠性。</p>
-<p><img src="/./%E3%80%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E8%B7%B5%E3%80%8BRAG%E7%AB%A0%E8%8A%82%E7%AC%94%E8%AE%B0/rag_frame.png" srcset="/img/loading.gif" lazyload alt="RAG系统框架" title="RAG系统框架示意图">  </p>
-
-
-
+<p><img src="/2025/08/21/%E3%80%8A%E5%A4%A7%E8%A7%84%E6%A8%A1%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E8%B7%B5%E3%80%8BRAG%E7%AB%A0%E8%8A%82%E7%AC%94%E8%AE%B0/rag_frame.png" srcset="/img/loading.gif" lazyload alt="RAG系统框架" title="RAG系统框架示意图">  </p>
 <h2 id="RAG任务分级"><a href="#RAG任务分级" class="headerlink" title="RAG任务分级"></a>RAG任务分级</h2><p>根据任务认知处理层次划分，可分为显性事实查询（Explicit Facts Query）、隐性事实查询（Implicit Facts Query）、可解释推理查询（Interpretable Rationales Query）以及隐性推理查询（Hidden Rationales Query）等四个层级。</p>
 <h2 id="模块化RAG架构"><a href="#模块化RAG架构" class="headerlink" title="模块化RAG架构"></a>模块化RAG架构</h2>
                 
