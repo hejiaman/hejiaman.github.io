@@ -30,8 +30,10 @@
 <meta property="og:image" content="http://example.com/2025/08/23/LangChain4j%E5%AE%9E%E8%B7%B5/chatmemory2.png">
 <meta property="og:image" content="http://example.com/2025/08/23/LangChain4j%E5%AE%9E%E8%B7%B5/rag1.png">
 <meta property="og:image" content="http://example.com/2025/08/23/LangChain4j%E5%AE%9E%E8%B7%B5/rag2.png">
+<meta property="og:image" content="http://example.com/2025/08/23/LangChain4j%E5%AE%9E%E8%B7%B5/rag3.png">
+<meta property="og:image" content="http://example.com/2025/08/23/LangChain4j%E5%AE%9E%E8%B7%B5/fc1.png">
 <meta property="article:published_time" content="2025-08-23T11:43:27.000Z">
-<meta property="article:modified_time" content="2025-08-25T13:44:11.185Z">
+<meta property="article:modified_time" content="2025-08-28T02:07:04.422Z">
 <meta property="article:author" content="hejiaman">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2025/08/23/LangChain4j%E5%AE%9E%E8%B7%B5/chatmemory1.png">
@@ -227,7 +229,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.2k 字
+          4.8k 字
         
       </span>
     
@@ -238,7 +240,7 @@
         
         
         
-          27 分钟
+          40 分钟
         
       </span>
     
@@ -407,7 +409,117 @@
 <p><img src="/2025/08/23/LangChain4j%E5%AE%9E%E8%B7%B5/rag1.png" srcset="/img/loading.gif" lazyload alt="Rag索引阶段流程"></p>
 <p><strong>检索阶段</strong>通常在线进行，当用户提交一个应该使用索引文档回答的问题时。用户的问题首先被转换为查询向量，然后检索数据库中与查询向量余弦相似度较大（相似度较高）的片段，最后再结合用户问题和检索出的片段一起发送给大模型。</p>
 <p><img src="/2025/08/23/LangChain4j%E5%AE%9E%E8%B7%B5/rag2.png" srcset="/img/loading.gif" lazyload alt="Rag检索阶段流程"></p>
-<h2 id="快速入门-1"><a href="#快速入门-1" class="headerlink" title="快速入门"></a>快速入门</h2>
+<h2 id="快速入门-1"><a href="#快速入门-1" class="headerlink" title="快速入门"></a>快速入门</h2><h3 id="索引阶段：构建向量数据库操作对象"><a href="#索引阶段：构建向量数据库操作对象" class="headerlink" title="索引阶段：构建向量数据库操作对象"></a>索引阶段：构建向量数据库操作对象</h3><p>实现流程：</p>
+<ol>
+<li>引入依赖 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--rag-easy依赖--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>dev.langchain4j<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>langchain4j-easy-rag<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.0.1-beta6<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure></li>
+<li>加载知识数据文档<ol>
+<li>在resource&#x2F;content中导入document</li>
+</ol>
+</li>
+<li>构建向量数据库操作对象</li>
+<li>把文档切割、向量化并存储到向量数据库中 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 构建向量数据库操作对象</span><br><span class="hljs-meta">@Bean</span><br><span class="hljs-keyword">public</span> EmbeddingStore <span class="hljs-title function_">store</span><span class="hljs-params">()</span>&#123; <span class="hljs-comment">// 注意embeddingStore对象已经被依赖自动注入，所以这里不能叫embeddingStore，使用store这个名字</span><br>    <span class="hljs-comment">// 1. 加载文档进内存</span><br>    List&lt;Document&gt; documents = ClassPathDocumentLoader.loadDocuments(<span class="hljs-string">&quot;content&quot;</span>);<br>    <span class="hljs-comment">// 2. 构建向量数据库操作对象</span><br>    <span class="hljs-type">InMemoryEmbeddingStore</span> <span class="hljs-variable">store</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">InMemoryEmbeddingStore</span>();<br>    <span class="hljs-comment">// 3. 构建EmbeddingStoreIngestor对象，完成文档切割和向量化，然后存储到数据库中</span><br>    <span class="hljs-type">EmbeddingStoreIngestor</span> <span class="hljs-variable">ingestor</span> <span class="hljs-operator">=</span> EmbeddingStoreIngestor.builder()<br>            .embeddingStore(store)<br>            .build();<br>    ingestor.ingest(documents);<br><br>    <span class="hljs-keyword">return</span> store;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="检索阶段：构建向量数据库检索对象"><a href="#检索阶段：构建向量数据库检索对象" class="headerlink" title="检索阶段：构建向量数据库检索对象"></a>检索阶段：构建向量数据库检索对象</h3><p>实现流程</p>
+<ol>
+<li>构建向量数据库检索对象 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 构建向量数据库检索对象</span><br><span class="hljs-meta">@Bean</span><br><span class="hljs-keyword">public</span> ContentRetriever  <span class="hljs-title function_">contentRetriever</span><span class="hljs-params">(EmbeddingStore store)</span>&#123;<br>    <span class="hljs-keyword">return</span> EmbeddingStoreContentRetriever.builder()<br>            .embeddingStore(store)  <span class="hljs-comment">// 向量数据库操作对象</span><br>            .minScore(<span class="hljs-number">0.5</span>)  <span class="hljs-comment">//最小余弦相似度分数</span><br>            .maxResults(<span class="hljs-number">3</span>)  <span class="hljs-comment">//最大查询结果数量</span><br>            .build();<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li>配置向量数据库检索对象 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@AiService(</span><br><span class="hljs-meta">    contentRetriever = &quot;contentRetriever&quot; //配置向量数据库检索对象</span><br><span class="hljs-meta">    )</span><br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="核心API"><a href="#核心API" class="headerlink" title="核心API"></a>核心API</h2><ol>
+<li><p>文档加载器</p>
+<p>用于将磁盘或网络中的数据加载进程序。</p>
+<ul>
+<li>FileSystemDocumentLoader，根据本地磁盘绝对路径加载</li>
+<li>ClassPathDocumentLoader，相对类路径加载</li>
+<li>UrlDocumentLoader，根据url路径加载</li>
+</ul>
+</li>
+<li><p>文档解析器</p>
+<p> 用于解析文档加载器加载进内存的内容，将非文本数据转化为纯文本</p>
+<ul>
+<li>TextDocumentParser，解析纯文本格式的文件</li>
+<li>ApachPdfBoxDocumentParser，解析pdf格式文件，使用时，需要引入相关依赖langchain4j-document-parser-apache-pdfbox，然后在加载文档进内存步骤中，指定文档解析器：List<Document> documents &#x3D; ClassPathDocumentLoader.loadDocuments(“content”,new ApachePdfBoxDocumentParser());</Document></li>
+<li>ApachPoiDocumentParser，解析微软的office文件，比如doc,ppt,xls</li>
+<li>ApacheTikaDocumentParser(default)，几乎可以解析所有格式文件</li>
+</ul>
+</li>
+<li><p>文档分割器  </p>
+<p>用于将大文档，切割成小片段</p>
+<ul>
+<li>DocumentByParagraphSplitter，按照段落分割文本</li>
+<li>DocumentByLineSplitter，按照行分割文本</li>
+<li>DocumentBySentenceSplitter，按照句子分割文本</li>
+<li>DocumentByWordSplitter，按照词分割文本</li>
+<li>DocumentByCharacterSplitter，按照固定数量字符分割文本</li>
+<li>DocumentByRegexSplitter，按照正则表达式分割文本</li>
+<li>递归：DocumentSplitters.recursive(…)，默认，递归分割，优先段落分割，再按照行，句子，词进行分割</li>
+</ul>
+<p> 实现步骤：</p>
+<ol>
+<li><p>构建文本分割器对象</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">DocumentSplitter</span> <span class="hljs-variable">documentSplitter</span> <span class="hljs-operator">=</span> DocumentSplitters.recursive(每个片段最大容纳字符，两个片段重叠字符数)<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>设置文本分割器对象</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//构建EmbeddingStoreIngestor对象，完成文档切割和向量化，然后存储到数据库中</span><br><span class="hljs-type">EmbeddingStoreIngestor</span> <span class="hljs-variable">ingestor</span> <span class="hljs-operator">=</span> EmbeddingStoreIngestor.builder()<br>        .documentSplitter(ds) <span class="hljs-comment">//设置文本分割器</span><br>        .embeddingStore(store)<br>        .build();<br>ingestor.ingest(documents);<br></code></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li><p>向量模型</p>
+<p>用于将文档分割后的片段进行向量化，或者查询时把用户输入的内容向量化</p>
+<p>实现步骤：</p>
+<ol>
+<li>配置向量模型信息(阿里云向量模型：通用文本向量-v3)</li>
+</ol>
+ <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">embedding-model:</span><br>  <span class="hljs-attr">base-url:</span> <span class="hljs-string">https://dashscope.aliyuncs.com/compatible-mode/v1</span><br>  <span class="hljs-attr">api-key:</span> <span class="hljs-string">$&#123;API-KEY&#125;</span><br>  <span class="hljs-attr">model-name:</span> <span class="hljs-string">text-embedding-v3</span><br>  <span class="hljs-attr">log-requests:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">log-responses:</span> <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+<ol start="2">
+<li>设置EmbeddingModel</li>
+</ol>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> EmbeddingModel embeddingModel;<br>...<br><br><span class="hljs-comment">// 构建向量数据库操作对象</span><br><span class="hljs-meta">@Bean</span><br><span class="hljs-keyword">public</span> EmbeddingStore <span class="hljs-title function_">store</span><span class="hljs-params">()</span>&#123;<br>    List&lt;Document&gt; documents = ClassPathDocumentLoader.loadDocuments(<span class="hljs-string">&quot;content&quot;</span>);<br>    <span class="hljs-type">InMemoryEmbeddingStore</span> <span class="hljs-variable">store</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">InMemoryEmbeddingStore</span>();<br>    <span class="hljs-type">DocumentSplitter</span> <span class="hljs-variable">ds</span> <span class="hljs-operator">=</span> DocumentSplitters.recursive(<span class="hljs-number">500</span>,<span class="hljs-number">100</span>);<br><br>    <span class="hljs-comment">// 构建向量数据库存储对象</span><br>    <span class="hljs-type">EmbeddingStoreIngestor</span> <span class="hljs-variable">ingestor</span> <span class="hljs-operator">=</span> EmbeddingStoreIngestor.builder()<br>            .documentSplitter(ds)<br>            .embeddingStore(store)<br>            .embeddingModel(embeddingModel)  <span class="hljs-comment">// 配置向量模型</span><br>            .build();<br>    ingestor.ingest(documents);<br><br>    <span class="hljs-keyword">return</span> store;<br>&#125;<br><span class="hljs-comment">// 构建向量数据库检索对象</span><br><span class="hljs-meta">@Bean</span><br><span class="hljs-keyword">public</span> ContentRetriever  <span class="hljs-title function_">contentRetriever</span><span class="hljs-params">(EmbeddingStore store)</span>&#123;<br>    <span class="hljs-keyword">return</span> EmbeddingStoreContentRetriever.builder()<br>            .embeddingStore(store)<br>            .minScore(<span class="hljs-number">0.5</span>)  <br>            .maxResults(<span class="hljs-number">3</span>)  <br>            .embeddingModel(embeddingModel) <span class="hljs-comment">// 配置向量模型</span><br>            .build();<br>&#125;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：直接参考教程后，发生了报错，原因是使用的向量模型再接口下每次最多只能处理10条文本，而此时把整个文档传入了EmbeddingStoreIngestor ingestor，超出限制，导致400错误</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">Caused by: dev.langchain4j.exception.HttpException: <span class="hljs-number">400</span> Bad Request: <span class="hljs-string">&quot;&#123;&quot;</span>erro<span class="hljs-string">r&quot;:&#123;&quot;</span>code<span class="hljs-string">&quot;:&quot;</span>InvalidParamete<span class="hljs-string">r&quot;,&quot;</span>param<span class="hljs-string">&quot;:null,&quot;</span>message<span class="hljs-string">&quot;:&quot;</span>&lt;<span class="hljs-number">400</span>&gt; InternalError.Algo.InvalidParameter: Value error, batch size <span class="hljs-keyword">is</span> invalid, it should <span class="hljs-keyword">not</span> be larger than <span class="hljs-number">10.</span>: <span class="hljs-built_in">input</span>.contents<span class="hljs-string">&quot;,&quot;</span><span class="hljs-built_in">type</span><span class="hljs-string">&quot;:&quot;</span>InvalidParamete<span class="hljs-string">r&quot;&#125;,&quot;</span><span class="hljs-built_in">id</span><span class="hljs-string">&quot;:&quot;</span>22bff643-9bc9-<span class="hljs-number">9164</span>-b238-e647ecfa0ff1<span class="hljs-string">&quot;,&quot;</span>request_id<span class="hljs-string">&quot;:&quot;</span>22bff643-9bc9-<span class="hljs-number">9164</span>-b238-e647ecfa0ff1<span class="hljs-string">&quot;&#125;&quot;</span><br></code></pre></td></tr></table></figure>
+<p>解决方案：先通过用for循环进行添加，但是还是报错，可能因为，即使每次传输10个子文档，每一个子文档还是被拆分成了超过10个的片段，传给embedding模型还是超出限制了。</p>
+</blockquote>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-variable">batchSize</span> <span class="hljs-operator">=</span> <span class="hljs-number">10</span>;<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; documents.size(); i += batchSize) &#123;<br>    List&lt;Document&gt; batch = documents.subList(i, Math.min(i + batchSize, documents.size()));<br>    ingestor.ingest(batch);<br>&#125;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>修改文档格式为pdf，转入pdf的解析器，就不报错了</p>
+</blockquote>
+<blockquote>
+<p>ps：后面有讲到这点问题，可以通过在application.yml中配置embedding-model的max-segments-per-batch: 10</p>
+</blockquote>
+</li>
+<li><p>EmbeddingStore</p>
+<p>用于操作向量数据库（添加，检索）</p>
+<p>采用RedisSearch存储向量数据，步骤如下：</p>
+<ol>
+<li>准备向量数据库</li>
+<li>引入依赖</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--引入langchain4j对redis向量数据库的支持--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>dev.langchain4j<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>langchain4j-community-redis-spring-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.0.1-beta6<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<ol start="3">
+<li>配置向量数据库信息</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">langchain4j:</span><br>  <span class="hljs-attr">community:</span><br>    <span class="hljs-attr">redis:</span><br>      <span class="hljs-attr">host:</span> <span class="hljs-string">localhost</span><br>      <span class="hljs-attr">port:</span> <span class="hljs-number">6379</span><br></code></pre></td></tr></table></figure>
+<ol start="4">
+<li>注入RedisEmbeddingStore并使用</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 注入RedisEmbeddingStore</span><br><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> RedisEmbeddingStore redisEmbeddingStore;<br>...<br><br><span class="hljs-comment">// 构建向量数据库操作对象</span><br><span class="hljs-meta">@Bean</span><br><span class="hljs-keyword">public</span> EmbeddingStore <span class="hljs-title function_">store</span><span class="hljs-params">()</span>&#123;<br>    List&lt;Document&gt; documents = ClassPathDocumentLoader.loadDocuments(<span class="hljs-string">&quot;content&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">ApachePdfBoxDocumentParser</span>());<br>    <span class="hljs-type">DocumentSplitter</span> <span class="hljs-variable">ds</span> <span class="hljs-operator">=</span> DocumentSplitters.recursive(<span class="hljs-number">500</span>,<span class="hljs-number">100</span>);<br><br>    <span class="hljs-type">EmbeddingStoreIngestor</span> <span class="hljs-variable">ingestor</span> <span class="hljs-operator">=</span> EmbeddingStoreIngestor.builder()<br>            .documentSplitter(ds)<br>            .embeddingStore(redisEmbeddingStore) <span class="hljs-comment">// 使用RedisEmbeddingStore</span><br>            .embeddingModel(embeddingModel)<br>            .build();<br>    ingestor.ingest(documents);<br>    <span class="hljs-keyword">return</span> redisEmbeddingStore;<br>&#125;<br><br><span class="hljs-comment">// 构建向量数据库检索对象</span><br><span class="hljs-meta">@Bean</span><br><span class="hljs-keyword">public</span> ContentRetriever  <span class="hljs-title function_">contentRetriever</span><span class="hljs-params">()</span>&#123;<br>    <span class="hljs-keyword">return</span> EmbeddingStoreContentRetriever.builder()<br>            <span class="hljs-comment">//.embeddingStore(store)</span><br>            .embeddingStore(redisEmbeddingStore)<br>            .minScore(<span class="hljs-number">0.5</span>)  <span class="hljs-comment">//最小余弦相似度分数</span><br>            .maxResults(<span class="hljs-number">3</span>)  <span class="hljs-comment">//最大查询结果数量</span><br>            .embeddingModel(embeddingModel) <span class="hljs-comment">// 使用RedisEmbeddingStore</span><br>            .build();<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p> 用RedisSearch实现了向量数据库：</p>
+<p><img src="/2025/08/23/LangChain4j%E5%AE%9E%E8%B7%B5/rag3.png" srcset="/img/loading.gif" lazyload alt="实现redis向量数据库"></p>
+<blockquote>
+<p>当我们已经在外部的向量数据库存储了数据，就没必要让<br> @Bean<br> public EmbeddingStore store(){}这个方法每次都执行了，可以注释掉@Bean。但第一次构建索引必须要执行哈。</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="Tools工具-Function-Calling"><a href="#Tools工具-Function-Calling" class="headerlink" title="Tools工具(Function Calling)"></a>Tools工具(Function Calling)</h1><p>添加function calling后的流程示意:</p>
+<p><img src="/2025/08/23/LangChain4j%E5%AE%9E%E8%B7%B5/fc1.png" srcset="/img/loading.gif" lazyload alt="流程图"></p>
+<ol>
+<li><p>准备工具方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ReservationTool</span> &#123;<br><br><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> ReservationService reservationService;<br><br><span class="hljs-comment">//1. 工具方法：添加预约信息</span><br><span class="hljs-meta">@Tool(&quot;预约志愿填报服务&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addReservation</span><span class="hljs-params">(</span><br><span class="hljs-params">        <span class="hljs-meta">@P(&quot;考生姓名&quot;)</span> String name,</span><br><span class="hljs-params">        <span class="hljs-meta">@P(&quot;考生性别&quot;)</span> String gender,</span><br><span class="hljs-params">        <span class="hljs-meta">@P(&quot;考生手机号码&quot;)</span> String phone,</span><br><span class="hljs-params">        <span class="hljs-meta">@P(&quot;预约沟通时间，格式为：yyyy-MM-dd&#x27;T&#x27;HH:mm&quot;)</span> String communicationTime,</span><br><span class="hljs-params">        <span class="hljs-meta">@P(&quot;考生省份&quot;)</span> String province,</span><br><span class="hljs-params">        <span class="hljs-meta">@P(&quot;考生预估分数&quot;)</span> Integer estimatedScore</span><br><span class="hljs-params"></span><br><span class="hljs-params">)</span>&#123;<br>    <span class="hljs-type">Reservation</span> <span class="hljs-variable">reservation</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Reservation</span>(<span class="hljs-literal">null</span>, name, gender, phone, LocalDateTime.parse(communicationTime), province, estimatedScore);<br>    reservationService.insert(reservation);<br>&#125;<br><br><span class="hljs-comment">//2. 工具方法：查询预约信息</span><br><span class="hljs-meta">@Tool(&quot;根据考生手机号查询预约信息&quot;)</span><br><span class="hljs-keyword">public</span> Reservation <span class="hljs-title function_">findByPhone</span><span class="hljs-params">(<span class="hljs-meta">@P(&quot;考生手机号&quot;)</span>String phone )</span>&#123;<br>    <span class="hljs-keyword">return</span> reservationService.findByPhone(phone);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+</li>
+<li><p>配置工具方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@AiService(</span><br><span class="hljs-meta">     wiringMode = AiServiceWiringMode.EXPLICIT,  </span><br><span class="hljs-meta">     chatModel = &quot;openAiChatModel&quot;, </span><br><span class="hljs-meta">     streamingChatModel = &quot;openAiStreamingChatModel&quot;,</span><br><span class="hljs-meta">     chatMemoryProvider = &quot;chatMemoryProvider&quot;, </span><br><span class="hljs-meta">     contentRetriever = &quot;contentRetriever&quot; ,</span><br><span class="hljs-meta">     tools = &quot;reservationTool&quot; //配置工具方法</span><br><span class="hljs-meta"> )</span><br> <span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ConsultantService</span> &#123;...&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+
                 
               </div>
             
@@ -459,7 +571,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年8月25日</div>
+          <div>2025年8月28日</div>
         </div>
       
       
