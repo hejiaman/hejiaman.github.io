@@ -39,8 +39,11 @@
 <meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/order2.png">
 <meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/order3.png">
 <meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/order4.png">
+<meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/redisson1.png">
+<meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/order5.png">
+<meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/order6.png">
 <meta property="article:published_time" content="2025-08-20T07:47:11.000Z">
-<meta property="article:modified_time" content="2025-08-30T14:46:44.408Z">
+<meta property="article:modified_time" content="2025-09-06T12:24:34.442Z">
 <meta property="article:author" content="hejiaman">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/nosql.png">
@@ -236,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          8.2k 字
+          9.7k 字
         
       </span>
     
@@ -247,7 +250,7 @@
         
         
         
-          68 分钟
+          81 分钟
         
       </span>
     
@@ -600,31 +603,148 @@
 </li>
 </ul>
 </li>
-<li><p><strong>一人一单</strong></p>
-<p>业务流程：</p>
+</ol>
+<h4 id="一人一单"><a href="#一人一单" class="headerlink" title="一人一单"></a><strong>一人一单</strong></h4><ol>
+<li>业务流程：</li>
+</ol>
 <p><img src="/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/order4.png" srcset="/img/loading.gif" lazyload alt="一人一单业务流程"></p>
 <blockquote>
 <p>注意点：查询+新增操作，需要保证原子性，否则就会出现超卖的现象，但是无法使用乐观锁（因为乐观锁是针对修改&#x2F;更新，而这里是新增一条数据），于是采用悲观锁方案synchronized </p>
 </blockquote>
-<p>悲观锁方案:</p>
+<ol start="2">
+<li><p>悲观锁方案</p>
 <ul>
-<li>加悲观锁synchronized： public synchronized Result createVoucherOder(Long voucherId)，问题是整个方法变成串行执行</li>
-<li>我们只想在userid一样的情况下采取判断一人一单情况，所以优化悲观锁的位置，按照用户id值来加锁:synchronized(userId.toString().intern())。<ul>
+<li><p>加悲观锁synchronized： public synchronized Result createVoucherOder(Long voucherId)，问题是整个方法变成串行执行</p>
+</li>
+<li><p>我们只想在userid一样的情况下采取判断一人一单情况，所以优化悲观锁的位置，按照用户id值来加锁:synchronized(userId.toString().intern())</p>
+<ul>
 <li>（这里的inter()是因为toString方法是new 字符串，虽然userId一样，但new 出来的新字符串还是不同的对象，跟我们想要的需求不符合，而inter就是返回字符串对象的规范表示，也就是如果在字符串池中有相同值得String 对象，就会直接返回他）</li>
 </ul>
 </li>
-<li>在上述中仍然有问题，通过synchronize完成自动释放锁后，其他线程就可以进入查询订单操作，但此时事务还没提交完（没写入数据库），所以仍有并发问题，所以锁应该加在函数外。   <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">synchronized</span>(userId.toString().inter())&#123;<br><span class="hljs-keyword">return</span> createVoucherOrder(voucherId);<br>&#125;<br></code></pre></td></tr></table></figure></li>
-<li>但上述中还存在一个事务问题，我们仅给createVoucherOrder函数加了@Transactional，而没有给调用它的函数加上事务，此时调用的就是VoucherOrderServiceImpl对象本身去执行方法，而事务要生效，必须是Spring动态代理对象去调用才行，即发生了<strong>事务失效</strong>：<ul>
+<li><p>在上述中仍然有问题，通过synchronize完成自动释放锁后，其他线程就可以进入查询订单操作，但此时事务还没提交完（没写入数据库），所以仍有并发问题，所以锁应该加在函数外。</p>
+   <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">synchronized</span>(userId.toString().inter())&#123;<br>    <span class="hljs-keyword">return</span> createVoucherOrder(voucherId);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>但上述中还存在一个事务问题，我们仅给createVoucherOrder函数加了@Transactional，而没有给调用它的函数加上事务，此时调用的就是VoucherOrderServiceImpl对象本身去执行方法，而事务要生效，必须是Spring动态代理对象去调用才行，即发生了<strong>事务失效</strong>：</p>
+<ul>
 <li>Spring 的事务是通过 AOP 实现的。如果方法是 在同一个类中调用的，AOP 切面无法生效，导致事务不生效。</li>
 <li>原因：Spring AOP 是基于代理的，当在同一个类内直接调用时，事务不会被代理切入，因此事务失效。</li>
 <li>解决方法：利用AopContext这个api的currentProxy方法拿到代理对象。</li>
 <li>注意：还需要在pom中引入依赖aspectjweaver，以及在启动类加上注解@EnableAspectJAutoProxy(exposeProxy &#x3D; True)来暴露代理对象<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">synchronized</span>(userId.toString().inter())&#123;<br>    <span class="hljs-type">IvoucherOrderService</span> <span class="hljs-variable">proxy</span> <span class="hljs-operator">=</span> (IvoucherOrderService) AopContext.currentProxy();<br>    <span class="hljs-keyword">return</span> proxy.createVoucherOrder(voucherId);<br>&#125;<br></code></pre></td></tr></table></figure></li>
 </ul>
 </li>
-<li>悲观锁的问题：在集群或分布式模式下，每个JVM都维护自己的锁监视器，多个线程都会拿到锁，会有安全问题</li>
+<li><p><strong>悲观锁的问题</strong>：只适合在单机模式下使用，在<strong>集群或分布式模式</strong>下，有多个JVM，每个JVM都维护自己的锁监视器，多个线程都会拿到锁，会有安全问题。</p>
+</li>
 </ul>
 </li>
 </ol>
+<p><strong>3. 分布式锁</strong></p>
+<p>要求：满足分布式系统或集群模式下<strong>多进程可见</strong>并且<strong>互斥</strong>的锁。</p>
+<p>常见实现：</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>MySQL</th>
+<th>Redis</th>
+<th>Zookeeper</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>互斥</td>
+<td>利用Mysql本身的互斥锁机制</td>
+<td>利用setnx这样的互斥命令</td>
+<td>利用结点的唯一性和有序性实现互斥</td>
+</tr>
+<tr>
+<td>高可用</td>
+<td>好</td>
+<td>好</td>
+<td>好</td>
+</tr>
+<tr>
+<td>高性能</td>
+<td>一般</td>
+<td>好</td>
+<td>一般</td>
+</tr>
+<tr>
+<td>安全性</td>
+<td>断开连接，自动释放</td>
+<td>利用锁超时时间，进行锁的到期释放</td>
+<td>临时节点，断开连接自动释放</td>
+</tr>
+</tbody></table>
+<p>Redis分布式锁实现要点：</p>
+<ol>
+<li><p>在获取锁的时候要存入线程标识，在释放锁的时候，需要进行判断，锁的标识是否是自己的线程标识，避免误删别人的锁。</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">ID_PRIFIX</span> <span class="hljs-operator">=</span> UUID.randomUUID().toString(<span class="hljs-literal">true</span>)+ <span class="hljs-string">&quot;-&quot;</span>; <span class="hljs-comment">// 用UUID来区分不同的JVM(服务)</span><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">tryLock</span><span class="hljs-params">(<span class="hljs-type">long</span> timeoutSeconds)</span> &#123;<br>    <span class="hljs-comment">// 一个服务器中的不同线程用Thread.currentThread().getId()获取，UUID区分服务，Id区分线程----&gt;实现集群的锁的id标识</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">threadId</span> <span class="hljs-operator">=</span> ID_PRIFIX + Thread.currentThread().getId();<br>    <span class="hljs-comment">// 获取锁——利用setnx来实现</span><br>    <span class="hljs-type">Boolean</span> <span class="hljs-variable">success</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue()<br>            .setIfAbsent(KEY_PREFIX + name, threadId, timeoutSeconds, TimeUnit.SECONDS);<br>    <span class="hljs-comment">// 为了避免自动拆箱造成的空指针风险</span><br>    <span class="hljs-keyword">return</span> Boolean.TRUE.equals(success);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>在释放锁的时候，需要注意<strong>判断和释放的原子性</strong>，否则还是可能在判断和释放之间有阻塞，导致超时释放锁，另一个线程拿到锁后，阻塞恢复，造成了误删锁的安全问题。</p>
+<ol>
+<li><p>实现步骤：</p>
+<ol>
+<li>用lua脚本实现原子性：</li>
+</ol>
+  <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- KEYS[1]就是锁的key，ARGV[1]就是 就是线程标识</span><br><span class="hljs-comment">-- 比较线程标识与锁中标识是否一致</span><br><span class="hljs-keyword">if</span>(redis.call(<span class="hljs-string">&quot;get&quot;</span>, KES[<span class="hljs-number">1</span>]) == ARGV[<span class="hljs-number">1</span>]) <span class="hljs-keyword">then</span><br>    <span class="hljs-comment">-- 一致，删除锁</span><br>    <span class="hljs-keyword">return</span> redis.call(<span class="hljs-string">&quot;del&quot;</span>, KES[<span class="hljs-number">1</span>])<br><span class="hljs-keyword">end</span><br><span class="hljs-comment">-- 如果不一致，返回0</span><br><span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>利用RedisTemplate调用Lua脚本：</li>
+</ol>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 提前定义lua脚本</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> DefaultRedisScript&lt;Long&gt; UNLOCK_SCRIPT;<br><br><span class="hljs-comment">// 静态代码块做初始化</span><br><span class="hljs-keyword">static</span>&#123;<br>UNLOCK_SCRIPT = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DefaultRedisScript</span>&lt;&gt;();<br>UNLOCK_SCRIPT.setLocation(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ClassPathResource</span>(<span class="hljs-string">&quot;unlock.lua&quot;</span>));<br>UNLOCK_SCRIPT.setResultType(Long.class);<br>&#125;<br><br><span class="hljs-comment">// 调用lua脚本</span><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">unlock</span><span class="hljs-params">()</span> &#123;<br><span class="hljs-comment">// 调用lua脚本_将判断和删除设计为原子操作</span><br>    stringRedisTemplate.execute(<br>            UNLOCK_SCRIPT,<br>            Collections.singletonList(KEY_PREFIX + name), <span class="hljs-comment">//参数1：KEY[1]，因为这里需要的是集合，所以不能直接传入锁的名称，需要调用这个单元素集合方法来传入</span><br>            ID_PRIFIX + Thread.currentThread().getId());<span class="hljs-comment">// 参数2：线程标识</span><br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ol>
+<p>存在问题：</p>
+<ul>
+<li>不可重入：同一线程无法多次获取同一把锁；</li>
+<li>不可重试：获取锁只尝试一次就返回false，没有重试机制</li>
+<li>超时释放：超时释放虽然可以避免死锁，这个时间长短设置权衡较难</li>
+<li>主从一致性：如果Redis提供主从集群，主从同步存在延迟，当主节点宕机，如果从节点没有同步完成，这时候有锁的安全问题</li>
+</ul>
+<p><strong>4. Redisson</strong></p>
+<p>定义：是一个在Redis基础上实现的Java驻内存数据网格（分布式工具集合）。提供一系列分布式的java常用对象和分布式服务，其中包含了分布式锁的实现。</p>
+<p>快速入门：</p>
+<ol>
+<li>引入依赖 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.redisson<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>redisson<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.13.6<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure></li>
+<li>配置Redisson客户端 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RedissonConfig</span> &#123;<br><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-keyword">public</span> RedissonClient <span class="hljs-title function_">redissonClient</span><span class="hljs-params">()</span>&#123;<br>        <span class="hljs-comment">// 配置</span><br>        <span class="hljs-type">Config</span> <span class="hljs-variable">config</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Config</span>();<br>        config.useSingleServer().setAddress(<span class="hljs-string">&quot;redis://192.168.100.128:6379&quot;</span>).setPassword(<span class="hljs-string">&quot;hjm861303&quot;</span>);<br>        <span class="hljs-comment">// 创建RdssonClient对象</span><br>        <span class="hljs-keyword">return</span> Redisson.create(config);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li>使用Redisson的分布式锁 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">handleVoucherOrder</span><span class="hljs-params">(VoucherOrder voucherOrder)</span> &#123;<br>    <span class="hljs-type">Long</span> <span class="hljs-variable">userId</span> <span class="hljs-operator">=</span> voucherOrder.getUserId();<br>    <span class="hljs-comment">// 创建锁对象</span><br>    <span class="hljs-type">RLock</span> <span class="hljs-variable">lock</span> <span class="hljs-operator">=</span> redissonClient.getLock(<span class="hljs-string">&quot;lock:order:&quot;</span> + userId);<br>    <span class="hljs-comment">// 获取锁</span><br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">isLock</span> <span class="hljs-operator">=</span> lock.tryLock();<br><br>    <span class="hljs-keyword">if</span>(!isLock)&#123;<br>        <span class="hljs-comment">// 获取锁失败</span><br>        log.error(<span class="hljs-string">&quot;不允许重复下单&quot;</span>);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-comment">// 获取锁成功</span><br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">// 执行下单任务</span><br>        proxy.createVoucherOder(voucherOrder);<br>    &#125; <span class="hljs-keyword">catch</span> (IllegalStateException e) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        <span class="hljs-comment">// 释放锁</span><br>        lock.unlock();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<ul>
+<li><p><strong>可重入锁实现</strong></p>
+<ul>
+<li>实现原理：在value部分不只是记录线程标识，而是通过<strong>哈希结构</strong>来记录 <strong>线程标识+重入次数</strong><br><img src="/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/redisson1.png" srcset="/img/loading.gif" lazyload></li>
+<li>注意点：<ul>
+<li><p>在释放锁的时候，需要判断重入次数是否为0，如果不为零，还需要重置锁的有效期</p>
+</li>
+<li><p>判断锁和获取锁操作需要保证原子性，同样，判断锁和释放锁也需要保证原子性，因此采用lua脚本来实现原子性</p>
+<p>  redisson获取锁实现：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java">&lt;T&gt; RFuture&lt;T&gt; <span class="hljs-title function_">tryLockInnerAsync</span><span class="hljs-params">(<span class="hljs-type">long</span> waitTime, <span class="hljs-type">long</span> leaseTime, TimeUnit unit, <span class="hljs-type">long</span> threadId, RedisStrictCommand&lt;T&gt; command)</span> &#123;<br>    internalLockLeaseTime = unit.toMillis(leaseTime);<br><br>    <span class="hljs-keyword">return</span> evalWriteAsync(getName(), LongCodec.INSTANCE, command,<br>            <span class="hljs-string">&quot;if (redis.call(&#x27;exists&#x27;, KEYS[1]) == 0) then &quot;</span> +<br>                    <span class="hljs-string">&quot;redis.call(&#x27;hincrby&#x27;, KEYS[1], ARGV[2], 1); &quot;</span> +<br>                    <span class="hljs-string">&quot;redis.call(&#x27;pexpire&#x27;, KEYS[1], ARGV[1]); &quot;</span> +<br>                    <span class="hljs-string">&quot;return nil; &quot;</span> +<br>                    <span class="hljs-string">&quot;end; &quot;</span> +<br>                    <span class="hljs-string">&quot;if (redis.call(&#x27;hexists&#x27;, KEYS[1], ARGV[2]) == 1) then &quot;</span> +<br>                    <span class="hljs-string">&quot;redis.call(&#x27;hincrby&#x27;, KEYS[1], ARGV[2], 1); &quot;</span> +<br>                    <span class="hljs-string">&quot;redis.call(&#x27;pexpire&#x27;, KEYS[1], ARGV[1]); &quot;</span> +<br>                    <span class="hljs-string">&quot;return nil; &quot;</span> +<br>                    <span class="hljs-string">&quot;end; &quot;</span> +<br>                    <span class="hljs-string">&quot;return redis.call(&#x27;pttl&#x27;, KEYS[1]);&quot;</span>,<br>            Collections.singletonList(getName()), internalLockLeaseTime, getLockName(threadId));<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>  释放锁实现：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> RFuture&lt;Boolean&gt; <span class="hljs-title function_">unlockInnerAsync</span><span class="hljs-params">(<span class="hljs-type">long</span> threadId)</span> &#123;<br><span class="hljs-keyword">return</span> evalWriteAsync(getName(), LongCodec.INSTANCE, RedisCommands.EVAL_BOOLEAN,<br>        <span class="hljs-string">&quot;if (redis.call(&#x27;hexists&#x27;, KEYS[1], ARGV[3]) == 0) then &quot;</span> +<br>                <span class="hljs-string">&quot;return nil;&quot;</span> +<br>                <span class="hljs-string">&quot;end; &quot;</span> +<br>                <span class="hljs-string">&quot;local counter = redis.call(&#x27;hincrby&#x27;, KEYS[1], ARGV[3], -1); &quot;</span> +<br>                <span class="hljs-string">&quot;if (counter &gt; 0) then &quot;</span> +<br>                <span class="hljs-string">&quot;redis.call(&#x27;pexpire&#x27;, KEYS[1], ARGV[2]); &quot;</span> +<br>                <span class="hljs-string">&quot;return 0; &quot;</span> +<br>                <span class="hljs-string">&quot;else &quot;</span> +<br>                <span class="hljs-string">&quot;redis.call(&#x27;del&#x27;, KEYS[1]); &quot;</span> +<br>                <span class="hljs-string">&quot;redis.call(&#x27;publish&#x27;, KEYS[2], ARGV[1]); &quot;</span> +<br>                <span class="hljs-string">&quot;return 1; &quot;</span> +<br>                <span class="hljs-string">&quot;end; &quot;</span> +<br>                <span class="hljs-string">&quot;return nil;&quot;</span>,<br>        Arrays.asList(getName(), getChannelName()), LockPubSub.UNLOCK_MESSAGE, internalLockLeaseTime, getLockName(threadId));<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>锁重试实现+看门狗机制</strong></p>
+</li>
+</ul>
+<p><img src="/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/order5.png" srcset="/img/loading.gif" lazyload alt="redisson的获取锁与释放锁流程示意"></p>
+<p>小结：</p>
+<ul>
+<li><p>可重入：利用hash结构记录线程id和重入次数</p>
+</li>
+<li><p>可重试：利用信号量和PubSub功能实现等待、唤醒，获取锁失败的重试机制</p>
+</li>
+<li><p>超时释放：利用watchDog看门狗机制，当获取锁成功后，开启一个后台定时任务，这个任务就是每隔一段时间（releaseTime&#x2F;3），就重置锁的超时时间</p>
+<blockquote>
+<p>注意：只有当leaseTime不指定或者传值为-1时，才会自动启用看门狗机制，初始租期默认30s，每隔10s续期一次</p>
+</blockquote>
+</li>
+<li><p><strong>主从一致性</strong></p>
+<p>redisson为了解决主从之间一致性问题，取消了主从节点，利用<strong>multiLock</strong>来解决。当获取锁的时候，必须所有节点都保存锁的标识才算获取锁成功。</p>
+<p><img src="/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/order6.png" srcset="/img/loading.gif" lazyload alt="redisson的multiLock机制"></p>
+</li>
+</ul>
 <h2 id="3-Redis的分布式"><a href="#3-Redis的分布式" class="headerlink" title="3. Redis的分布式"></a>3. Redis的分布式</h2><h3 id="3-1-Redis持久化"><a href="#3-1-Redis持久化" class="headerlink" title="3.1 Redis持久化"></a>3.1 Redis持久化</h3><h4 id="RDB-Redis-Database-Backup-File"><a href="#RDB-Redis-Database-Backup-File" class="headerlink" title="RDB(Redis Database Backup File)"></a>RDB(Redis Database Backup File)</h4><p>Redis数据备份文件，也叫Redis数据快照，就是将内存中的所有数据都记录到磁盘中。当故障后，从磁盘读取快照文件，恢复数据。快照文件称为RDB文件，默认保存在当前运行目录。  </p>
 <ul>
 <li>save命令：由Redis主进程来执行RDB，会阻塞所有命令  </li>
@@ -734,7 +854,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年8月30日</div>
+          <div>2025年9月6日</div>
         </div>
       
       
