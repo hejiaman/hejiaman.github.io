@@ -47,8 +47,11 @@
 <meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/order9.png">
 <meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/MQ1.png">
 <meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/MQ1.png">
+<meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/hexo-blog/source/_posts/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/feed1.png">
+<meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/hexo-blog/source/_posts/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/feed2.png">
+<meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/hexo-blog/source/_posts/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/feed3.png">
 <meta property="article:published_time" content="2025-08-20T07:47:11.000Z">
-<meta property="article:modified_time" content="2025-09-14T13:49:12.652Z">
+<meta property="article:modified_time" content="2025-09-16T07:28:58.062Z">
 <meta property="article:author" content="hejiaman">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/nosql.png">
@@ -244,7 +247,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          13k 字
+          15k 字
         
       </span>
     
@@ -255,7 +258,7 @@
         
         
         
-          111 分钟
+          126 分钟
         
       </span>
     
@@ -965,7 +968,7 @@
 <p>通过sorted set结构实现排序功能，完成点赞列表queryBlogLikes</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryBlogLikes</span><span class="hljs-params">(Long id)</span> &#123;<br>    <span class="hljs-comment">// 1. 查询top5的点赞用户 zrange key 0 4</span><br>    Set&lt;String&gt; top5 = stringRedisTemplate.opsForZSet().range(BLOG_LIKED_KEY + id, <span class="hljs-number">0</span>, <span class="hljs-number">4</span>);<br>    <span class="hljs-keyword">if</span>(top5==<span class="hljs-literal">null</span>||top5.isEmpty())&#123;<br>        <span class="hljs-keyword">return</span> Result.ok(Collections.emptyList());<br>    &#125;<br>    <span class="hljs-comment">// 2. 解析出用户id</span><br>    List&lt;Long&gt; ids = top5.stream().map(Long::valueOf).collect(Collectors.toList());<br>    <span class="hljs-type">String</span> <span class="hljs-variable">idStr</span> <span class="hljs-operator">=</span> StrUtil.join(<span class="hljs-string">&quot;,&quot;</span>, ids);<br>    <span class="hljs-comment">// 3. 根据用户id查询用户</span><br>    List&lt;UserDTO&gt; userDTOS = userService.query().in(<span class="hljs-string">&quot;id&quot;</span>,ids).last(<span class="hljs-string">&quot;ORDER BY FIELD (id,&quot;</span> + idStr + <span class="hljs-string">&quot;)&quot;</span>).list()<br>            .stream()<br>            .map(user -&gt; BeanUtil.copyProperties(user, UserDTO.class))<br>            .collect(Collectors.toList());<br>    <span class="hljs-comment">// 4. 返回</span><br>    <span class="hljs-keyword">return</span> Result.ok(userDTOS);<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<h4 id="好友关注"><a href="#好友关注" class="headerlink" title="好友关注"></a>好友关注</h4><h5 id="关注与取关"><a href="#关注与取关" class="headerlink" title="关注与取关"></a>关注与取关</h5><p>判断是否关注</p>
+<h3 id="2-6-好友关注"><a href="#2-6-好友关注" class="headerlink" title="2.6 好友关注"></a>2.6 好友关注</h3><h4 id="关注与取关"><a href="#关注与取关" class="headerlink" title="关注与取关"></a>关注与取关</h4><p>判断是否关注</p>
 <p>请求URL：&#x2F;follow&#x2F;or&#x2F;not&#x2F;{id}</p>
 <p>代码实现：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">isFollow</span><span class="hljs-params">(Long followUserId)</span> &#123;<br>    <span class="hljs-comment">//  获取登录用户</span><br>    <span class="hljs-type">Long</span> <span class="hljs-variable">userId</span> <span class="hljs-operator">=</span> UserHolder.getUser().getId();<br><br>    <span class="hljs-comment">// 1. 查询是否关注 select count from tb_follow where userId = ? and follow_user_id = ?</span><br>    <span class="hljs-type">Integer</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> query().eq(<span class="hljs-string">&quot;user_id&quot;</span>, userId).eq(<span class="hljs-string">&quot;follow_user_id&quot;</span>, followUserId).count();<br>    <span class="hljs-comment">// 2. 判断</span><br>    <span class="hljs-keyword">return</span> Result.ok(count &gt; <span class="hljs-number">0</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
@@ -979,12 +982,149 @@
 
 
 
-<h5 id="共同关注"><a href="#共同关注" class="headerlink" title="共同关注"></a>共同关注</h5><p>请求URL：&#x2F;follow&#x2F;common&#x2F;{id}</p>
+<h4 id="共同关注"><a href="#共同关注" class="headerlink" title="共同关注"></a>共同关注</h4><p>请求URL：&#x2F;follow&#x2F;common&#x2F;{id}</p>
 <p>思路：想要实现交集的运算，可以使用redis中的set结构，key为userId，通过SINTER s1 s2找到集合s1和s2的交集</p>
 <p>代码实现：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">followCommons</span><span class="hljs-params">(Long id)</span> &#123;<br>    <span class="hljs-comment">// 1. 获取当前用户</span><br>    <span class="hljs-type">Long</span> <span class="hljs-variable">userId</span> <span class="hljs-operator">=</span> UserHolder.getUser().getId();<br>    <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;follow:&quot;</span> + userId;<br>    <span class="hljs-comment">// 2. 求交集</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">key2</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;follow:&quot;</span> + id;<br>    Set&lt;String&gt; intersect = stringRedisTemplate.opsForSet().intersect(key, key2);<br>    <span class="hljs-keyword">if</span>(intersect.isEmpty() || intersect == <span class="hljs-literal">null</span> )&#123;<br>        <span class="hljs-comment">// 无交集</span><br>        <span class="hljs-keyword">return</span> Result.ok();<br>    &#125;<br>    <span class="hljs-comment">// 3. 解析id集合</span><br>    List&lt;Long&gt; ids = intersect.stream().map(Long::valueOf).collect(Collectors.toList());<br>    <span class="hljs-comment">// 4. 查询用户</span><br>    List&lt;UserDTO&gt; users = userService.listByIds(ids)<br>            .stream()<br>            .map(user -&gt; BeanUtil.copyProperties(user, UserDTO.class))<br>            .collect(Collectors.toList());<br>    <span class="hljs-keyword">return</span> Result.ok(users);<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<h5 id="关注推送"><a href="#关注推送" class="headerlink" title="关注推送"></a>关注推送</h5><h2 id="3-Redis的分布式"><a href="#3-Redis的分布式" class="headerlink" title="3. Redis的分布式"></a>3. Redis的分布式</h2><h3 id="3-1-Redis持久化"><a href="#3-1-Redis持久化" class="headerlink" title="3.1 Redis持久化"></a>3.1 Redis持久化</h3><h4 id="RDB-Redis-Database-Backup-File"><a href="#RDB-Redis-Database-Backup-File" class="headerlink" title="RDB(Redis Database Backup File)"></a>RDB(Redis Database Backup File)</h4><p>Redis数据备份文件，也叫Redis数据快照，就是将内存中的所有数据都记录到磁盘中。当故障后，从磁盘读取快照文件，恢复数据。快照文件称为RDB文件，默认保存在当前运行目录。  </p>
+<h4 id="关注推送"><a href="#关注推送" class="headerlink" title="关注推送"></a>关注推送</h4><p>Feed流模式</p>
+<ul>
+<li><p>TimeLine：不做内容筛选，按照内容发布时间排序，常用于好友或关注。例如：朋友圈</p>
+<ul>
+<li><p>优点：信息全面，不会丢失。实现相对简单</p>
+</li>
+<li><p>缺点：信息噪声较多，用户不一定感兴趣</p>
+</li>
+<li><p>实现方案：</p>
+<ul>
+<li><p>拉模式（读扩散）</p>
+<ul>
+<li><p>只有用户在读取关注用户消息时候才拉去最新消息并按时间排序</p>
+</li>
+<li><p>优点：节省内存空间</p>
+</li>
+<li><p>缺点：每次读都需要临时拉取+排序，延迟较高</p>
+<img src="/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/hexo-blog\source\_posts\Redis项目及原理总结\feed1.png" srcset="/img/loading.gif" lazyload alt="拉模式示意图" style="zoom:67%;"></li>
+</ul>
+</li>
+<li><p>推模式（写扩散）</p>
+<ul>
+<li><p>用户直接将消息推送到所有粉丝的收件箱中</p>
+</li>
+<li><p>优点：延迟较低</p>
+</li>
+<li><p>缺点：内存占用较高</p>
+<img src="/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/hexo-blog\source\_posts\Redis项目及原理总结\feed2.png" srcset="/img/loading.gif" lazyload alt="推模式示意图" style="zoom:67%;"></li>
+</ul>
+</li>
+<li><p>推拉结合（读写混合）</p>
+<ul>
+<li><p>兼具读扩散和写扩散</p>
+</li>
+<li><p>对于粉丝量很少的用户，采用推模式；对于粉丝量很大的用户，针对活跃粉丝（数量较少）采用推模式，普通粉丝（数量较多）采用拉模式。</p>
+<img src="/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/hexo-blog\source\_posts\Redis项目及原理总结\feed3.png" srcset="/img/loading.gif" lazyload alt="推拉结合模式示意图" style="zoom:67%;"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>智能排序：利用算法屏蔽掉违规、用户不感兴趣的内容。推送用户感兴趣的信息来吸引用户</p>
+<ul>
+<li>优点：投喂用户感兴趣信息，用户粘度高，容易沉迷</li>
+<li>缺点：算法不精准可能会起反作用</li>
+</ul>
+</li>
+</ul>
+<p>业务需求</p>
+<ol>
+<li><p>新增笔记的业务，在保存blog的同时，推送到粉丝的收件箱</p>
+</li>
+<li><p>收件箱可以根据时间戳排序，必须使用redis的数据结构实现</p>
+</li>
+<li><p>查询收件箱数据时，可以实现分页查询</p>
+</li>
+</ol>
+<p>Redis数据结构选择</p>
+<ul>
+<li>Feed流中的数据会不断更新，所以数据角标也在变化，因此不能采用传统的分页模式</li>
+<li>采用滚动分页模式（记录前一次查询的最后一个数据，再从最后一个数据开始查询）</li>
+<li>List结构不支持滚动分页模式，而sortedSet支持按照score值进行查询，可以实现滚动分页，查询出的数据不会重复</li>
+</ul>
+<p>代码实现</p>
+<ul>
+<li>推送笔记到粉丝的收件箱</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">saveBlog</span><span class="hljs-params">(Blog blog)</span> &#123;<br>    <span class="hljs-comment">// 1. 获取登录用户</span><br>    <span class="hljs-type">UserDTO</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> UserHolder.getUser();<br>    blog.setUserId(user.getId());<br>    <span class="hljs-comment">// 2. 保存探店笔记</span><br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">isSuccess</span> <span class="hljs-operator">=</span> save(blog);<br>    <span class="hljs-keyword">if</span>(!isSuccess)&#123;<br>        <span class="hljs-keyword">return</span> Result.fail(<span class="hljs-string">&quot;新增笔记失败！&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">// 3. 查询笔记作者的所有粉丝 select * from tb_follow where follow_user_id = ?</span><br>    List&lt;Follow&gt; follows = followService.query().eq(<span class="hljs-string">&quot;follow_user_id&quot;</span>, user.getId()).list();<br>    <span class="hljs-comment">// 4. 推送笔记id给所有粉丝</span><br>    <span class="hljs-keyword">for</span> (Follow follow : follows) &#123;<br>        <span class="hljs-comment">// 4.1 获取粉丝id</span><br>        <span class="hljs-type">Long</span> <span class="hljs-variable">userId</span> <span class="hljs-operator">=</span> follow.getUserId();<br>        <span class="hljs-comment">// 4.2 推送</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> FEED_KEY+ userId;<br>        stringRedisTemplate.opsForZSet().add(key,blog.getId().toString(), System.currentTimeMillis());<br>    &#125;<br>    <span class="hljs-comment">// 3. 返回id</span><br>    <span class="hljs-keyword">return</span> Result.ok(blog.getId());<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>推模式实现feed流（获取关注博主的最新博客），并且以滚动分页查询的方式展示</p>
+<ul>
+<li><p>滚动分页查询参数：</p>
+<table>
+<thead>
+<tr>
+<th align="center">参数</th>
+<th align="center">参数含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">max</td>
+<td align="center">第一次查询：当前时间戳 | 已经查询过：上次查询的最小时间戳</td>
+</tr>
+<tr>
+<td align="center">min</td>
+<td align="center">最小时间戳：0</td>
+</tr>
+<tr>
+<td align="center">offset</td>
+<td align="center">第一次查询：0 | 已经查询过：<strong>上一次查询结果中与最小值元素一致的个数</strong></td>
+</tr>
+<tr>
+<td align="center">count</td>
+<td align="center">与前端协调好要展现多少条，eg 3条</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+</ul>
+<p>封装滚动分页结果</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/*</span><br><span class="hljs-comment">滚动分页结果</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Data</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ScrollResult</span> &#123;<br>    <span class="hljs-keyword">private</span> List&lt;?&gt; list;<br>    <span class="hljs-keyword">private</span> Long minTime;<br>    <span class="hljs-keyword">private</span> Integer offset;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>用户通过滚动分页查询到收件箱</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryBlogOfFollow</span><span class="hljs-params">(Long max, Integer offset)</span> &#123;<br>    <span class="hljs-comment">// 1. 获取当前用户</span><br>    <span class="hljs-type">Long</span> <span class="hljs-variable">userId</span> <span class="hljs-operator">=</span> UserHolder.getUser().getId();<br>    <span class="hljs-comment">// 2. 查询收件箱 ZREVRANGEBYSCORE key max min LIMIT offset count</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> FEED_KEY + userId;<br>    Set&lt;ZSetOperations.TypedTuple&lt;String&gt;&gt; typedTuples = stringRedisTemplate.opsForZSet().reverseRangeByScoreWithScores(key, <span class="hljs-number">0</span>, max, offset, <span class="hljs-number">2</span>);<br>    <span class="hljs-keyword">if</span>(typedTuples==<span class="hljs-literal">null</span>||typedTuples.isEmpty())&#123;<br>        <span class="hljs-comment">// 非空判断</span><br>        <span class="hljs-keyword">return</span> Result.ok();<br>    &#125;<br>    <span class="hljs-comment">// 3. 解析数据blogId, score(时间戳), offset(与查询出的最后一个元素相同的元素数量)</span><br>    List&lt;Long&gt; ids = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(typedTuples.size());<br>    <span class="hljs-type">long</span> <span class="hljs-variable">minTime</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">os</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; <span class="hljs-comment">// 记录与元组中最小时间相同得元素个数=offset</span><br>    <span class="hljs-keyword">for</span>(ZSetOperations.TypedTuple&lt;String&gt; typedTuple : typedTuples)&#123;<br>        <span class="hljs-comment">// 3.1 blogId</span><br>        ids.add(Long.valueOf(typedTuple.getValue()));<br>        <span class="hljs-comment">// 3.2 score(时间戳)_只保留最后一个最小时间就可以 os记录与最小score相同的元素个数，至少是1个</span><br>        <span class="hljs-type">long</span> <span class="hljs-variable">time</span> <span class="hljs-operator">=</span> typedTuple.getScore().longValue(); <br>        <span class="hljs-comment">// 取出的只有可能是 1. 和上一个元素score相同; 2. 比上一个还小，因为是zset，按照score倒序的</span><br>        <span class="hljs-keyword">if</span>(time == minTime)&#123;<br>            os++;<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            minTime = typedTuple.getScore().longValue();<br>            os = <span class="hljs-number">1</span>;<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// 4. 根据id查询blog</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">idStr</span> <span class="hljs-operator">=</span> StrUtil.join(<span class="hljs-string">&quot;,&quot;</span>, ids);<br>    List&lt;Blog&gt; blogs = query().in(<span class="hljs-string">&quot;id&quot;</span>,ids).last(<span class="hljs-string">&quot;ORDER BY FIELD (id,&quot;</span> + idStr + <span class="hljs-string">&quot;)&quot;</span>).list();<br>    <span class="hljs-comment">// 不能直接用List&lt;Blog&gt; blogs = listByIds(ids)的原因是：这种方式是基于MySQL的in语句进行查询，无法保证顺序，需要用orderby来保证顺序</span><br><br>    <span class="hljs-keyword">for</span> (Blog blog : blogs) &#123;<br>        <span class="hljs-comment">//查询blog有关用户</span><br>        queryBlogUser(blog);<br>        <span class="hljs-comment">//查询blog是否被点赞</span><br>        isBlogLiked(blog);<br>    &#125;<br><br>    <span class="hljs-comment">// 5. 封装并返回</span><br>    <span class="hljs-type">ScrollResult</span> <span class="hljs-variable">r</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ScrollResult</span>();<br>    r.setList(blogs);<br>    r.setOffset(os);<br>    r.setMinTime(minTime);<br>    <span class="hljs-keyword">return</span> Result.ok(r);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="2-7-附近商铺"><a href="#2-7-附近商铺" class="headerlink" title="2.7 附近商铺"></a>2.7 附近商铺</h3><p>GEO数据结构</p>
+<p>Redis GEO 主要用于存储地理位置信息，并对存储的信息进行操作，该功能在 Redis 3.2 版本新增。</p>
+<p>Redis GEO 操作方法有：</p>
+<ul>
+<li>geoadd：添加地理位置的坐标。（包含：经度，纬度，值）</li>
+<li>geopos：获取地理位置的坐标。</li>
+<li>geodist：计算两个位置之间的距离。</li>
+<li>georadius：根据用户给定的经纬度坐标来获取指定范围内的地理位置集合。（6.2以后已废弃）</li>
+<li>geosearch：在指定范围内搜索member，并按照与指定点之间的距离排序后返回，范围可以是圆形或矩形。</li>
+<li>geosearchstore：与geosearch功能类似，不过它可以把结果存储到一个指定的key中</li>
+<li>geohash：返回一个或多个位置对象的 geohash 值。</li>
+</ul>
+<p>前置处理</p>
+<ul>
+<li>导入商铺的经纬度信息到redis中，key为typeId（店铺类型），值为店铺id</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">loadShopLoc</span><span class="hljs-params">()</span>&#123;<br>    <span class="hljs-comment">// 1. 查询店铺信息</span><br>    List&lt;Shop&gt; list = shopService.list();<br>    <span class="hljs-comment">// 2. 把店铺分组（按照typeid分组，id一致的放到一个集合中）</span><br>    Map&lt;Long, List&lt;Shop&gt;&gt; map =  list.stream().collect(Collectors.groupingBy(Shop::getTypeId));<br>    <span class="hljs-comment">// 3. 分批完成写入redis中</span><br>    <span class="hljs-keyword">for</span> (Map.Entry&lt;Long, List&lt;Shop&gt;&gt; entry : map.entrySet()) &#123;<br>        <span class="hljs-comment">// 3.1 获取类型id</span><br>        <span class="hljs-type">Long</span> <span class="hljs-variable">typeId</span> <span class="hljs-operator">=</span> entry.getKey();<br>        <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> SHOP_GEO_KEY + typeId;<br>        <span class="hljs-comment">// 3.2 获取同类型的店铺集合</span><br>        List&lt;Shop&gt; value = entry.getValue();<br>        List&lt;RedisGeoCommands.GeoLocation&lt;String&gt;&gt;locations = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(value.size());<br>        <span class="hljs-comment">// 3.3 写入redis GEOADD key 经度 纬度 member</span><br>        <span class="hljs-keyword">for</span> (Shop shop : value) &#123;<br>            <span class="hljs-comment">//stringRedisTemplate.opsForGeo().add(key, new Point(shop.getX(), shop.getY()),shop.getId().toString());效率较低，每个店铺都要发起请求</span><br>            locations.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">RedisGeoCommands</span>.GeoLocation&lt;&gt;(<br>                    shop.getId().toString(),<br>                    <span class="hljs-keyword">new</span> <span class="hljs-title class_">Point</span>(shop.getX(),shop.getY())<br>            ));<br>        &#125;<br>        stringRedisTemplate.opsForGeo().add(key, locations);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>附近商铺搜索</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryShopByType</span><span class="hljs-params">(Integer typeId, Integer current, Double x, Double y)</span> &#123;<br>    <span class="hljs-comment">// 1. 判断是否需要根据坐标进行查询（前端不一定传过来坐标）</span><br>    <span class="hljs-keyword">if</span>(x == <span class="hljs-literal">null</span> || y == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">// 不需要坐标查询，按照数据库查询</span><br>        Page&lt;Shop&gt; page = query()<br>                .eq(<span class="hljs-string">&quot;type_id&quot;</span>, typeId)<br>                .page(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Page</span>&lt;&gt;(current, SystemConstants.DEFAULT_PAGE_SIZE));<br>        <span class="hljs-comment">//返回数据</span><br>        <span class="hljs-keyword">return</span> Result.ok(page);<br>    &#125;<br>    <span class="hljs-comment">// 2. 计算分页参数</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">from</span> <span class="hljs-operator">=</span> (current -<span class="hljs-number">1</span>) * SystemConstants.DEFAULT_PAGE_SIZE;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">end</span> <span class="hljs-operator">=</span> current*SystemConstants.DEFAULT_PAGE_SIZE;<br>    <span class="hljs-comment">// 3. 查询redis 按照距离进行排序和分页。结果：shopid,distance</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> SHOP_GEO_KEY + typeId;<br>    GeoResults&lt;RedisGeoCommands.GeoLocation&lt;String&gt;&gt; results = stringRedisTemplate.opsForGeo()  <span class="hljs-comment">// GEOSEARCH BYLONLAT x,y BYRADIUS 10 WITHDISTANCE</span><br>            .search(key,<br>                    GeoReference.fromCoordinate(x, y),<br>                    <span class="hljs-keyword">new</span> <span class="hljs-title class_">Distance</span>(<span class="hljs-number">5000</span>),<br>                    RedisGeoCommands.GeoSearchCommandArgs.newGeoSearchArgs().includeDistance().limit(end)<br>            );<br>    <span class="hljs-comment">// 4. 截取从from到end的部分，解析出id</span><br>    <span class="hljs-keyword">if</span>(results == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> Result.ok();<br>    &#125;<br>    List&lt;GeoResult&lt;RedisGeoCommands.GeoLocation&lt;String&gt;&gt;&gt; list  = results.getContent();<br>    <span class="hljs-keyword">if</span>(list.size() &lt;= from)&#123;<br>        <span class="hljs-comment">// 说明没有下一页了</span><br>        <span class="hljs-keyword">return</span> Result.ok();<br>    &#125;<br>    List&lt;Long&gt; ids = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(list.size());<br>    Map&lt;String,Distance&gt; distanceMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;(list.size());<br>    list.stream().skip(from).forEach(result -&gt;&#123; <span class="hljs-comment">//跳过from前面的东西</span><br>        <span class="hljs-comment">// 获取店铺id</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">shopIdStr</span> <span class="hljs-operator">=</span> result.getContent().getName();<br>        ids.add(Long.parseLong(shopIdStr));<br>        <span class="hljs-comment">// 获取距离</span><br>        <span class="hljs-type">Distance</span> <span class="hljs-variable">distance</span> <span class="hljs-operator">=</span> result.getDistance();<br>        distanceMap.put(shopIdStr, distance);<br>    &#125;);<br>    <span class="hljs-comment">// 5. 根据id查询店铺后返回</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">idStr</span> <span class="hljs-operator">=</span> StrUtil.join(<span class="hljs-string">&quot;,&quot;</span>, ids);<br>    List&lt;Shop&gt; shops = query().in(<span class="hljs-string">&quot;id&quot;</span>, ids).last(<span class="hljs-string">&quot;ORDER BY FIELD (id,&quot;</span> + idStr + <span class="hljs-string">&quot;)&quot;</span>).list();<br>    <span class="hljs-keyword">for</span> (Shop shop : shops) &#123;<br>        shop.setDistance(distanceMap.get(shop.getId().toString()).getValue());<br>    &#125;<br>    <span class="hljs-keyword">return</span> Result.ok(shops);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="3-Redis的分布式"><a href="#3-Redis的分布式" class="headerlink" title="3. Redis的分布式"></a>3. Redis的分布式</h2><h3 id="3-1-Redis持久化"><a href="#3-1-Redis持久化" class="headerlink" title="3.1 Redis持久化"></a>3.1 Redis持久化</h3><h4 id="RDB-Redis-Database-Backup-File"><a href="#RDB-Redis-Database-Backup-File" class="headerlink" title="RDB(Redis Database Backup File)"></a>RDB(Redis Database Backup File)</h4><p>Redis数据备份文件，也叫Redis数据快照，就是将内存中的所有数据都记录到磁盘中。当故障后，从磁盘读取快照文件，恢复数据。快照文件称为RDB文件，默认保存在当前运行目录。  </p>
 <ul>
 <li>save命令：由Redis主进程来执行RDB，会阻塞所有命令  </li>
 <li>bgsave命令：开启子进程执行RDB，避免主进程受影响</li>
@@ -1093,7 +1233,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年9月14日</div>
+          <div>2025年9月16日</div>
         </div>
       
       
