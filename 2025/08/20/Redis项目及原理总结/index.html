@@ -31,6 +31,8 @@
 <meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/redislogin.png">
 <meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/redislogin2.png">
 <meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/shopcache1.png">
+<meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/hexo-blog/source/_posts/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/cache1.png">
+<meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/hexo-blog/source/_posts/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/cache2.png">
 <meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/shopcache2.png">
 <meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/shopcache3.png">
 <meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/shopcache4.png">
@@ -51,7 +53,7 @@
 <meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/hexo-blog/source/_posts/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/feed2.png">
 <meta property="og:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/hexo-blog/source/_posts/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/feed3.png">
 <meta property="article:published_time" content="2025-08-20T07:47:11.000Z">
-<meta property="article:modified_time" content="2025-09-16T07:28:58.062Z">
+<meta property="article:modified_time" content="2025-10-09T09:43:39.153Z">
 <meta property="article:author" content="hejiaman">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/nosql.png">
@@ -247,7 +249,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          15k 字
+          16k 字
         
       </span>
     
@@ -258,7 +260,7 @@
         
         
         
-          126 分钟
+          137 分钟
         
       </span>
     
@@ -315,7 +317,7 @@
 <li>Stream类型：消息队列，提供消费者组模式</li>
 </ul>
 <p>Redis命令，详见<a target="_blank" rel="noopener" href="https://www.runoob.com/redis/redis-commands.html">菜鸟教程Redis命令</a>。</p>
-<h2 id="2-Redis项目——黑马点评"><a href="#2-Redis项目——黑马点评" class="headerlink" title="2. Redis项目——黑马点评"></a>2. Redis项目——黑马点评</h2><h3 id="2-1-短信验证码登录"><a href="#2-1-短信验证码登录" class="headerlink" title="2.1 短信验证码登录"></a>2.1 短信验证码登录</h3><h4 id="基于Session实现登录"><a href="#基于Session实现登录" class="headerlink" title="基于Session实现登录"></a>基于Session实现登录</h4><p>业务流程：  </p>
+<h2 id="2-Redis项目"><a href="#2-Redis项目" class="headerlink" title="2. Redis项目"></a>2. Redis项目</h2><h3 id="2-1-短信验证码登录"><a href="#2-1-短信验证码登录" class="headerlink" title="2.1 短信验证码登录"></a>2.1 短信验证码登录</h3><h4 id="基于Session实现登录"><a href="#基于Session实现登录" class="headerlink" title="基于Session实现登录"></a>基于Session实现登录</h4><p>业务流程：  </p>
 <ol>
 <li>发送短信验证码</li>
 <li>短信验证码登录、注册</li>
@@ -439,7 +441,20 @@
 <p>代码实现（写操作）：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-meta">@Transactional</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">update</span><span class="hljs-params">(Shop shop)</span> &#123;<br>    <span class="hljs-type">Long</span> <span class="hljs-variable">shopId</span> <span class="hljs-operator">=</span> shop.getId();<br>    <span class="hljs-keyword">if</span> (shopId == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> Result.fail(<span class="hljs-string">&quot;店铺id不能为空！&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">// 1. 更新数据库</span><br>    updateById(shop);<br>    <span class="hljs-comment">// 2. 删除缓存</span><br>    stringRedisTemplate.delete(CACHE_SHOP_KEY + shopId);<br>    <span class="hljs-comment">// 3. 返回</span><br>    <span class="hljs-keyword">return</span> Result.ok();<br>&#125;<br></code></pre></td></tr></table></figure>
 
+<blockquote>
+<p>补充内容</p>
+<p><strong>更新数据库+异步更新缓存</strong>实现双写一致性的几种常用方案：</p>
+<ol>
+<li><p>利用MQ消息队列，异步通知保证数据的最终一致性</p>
+<img src="/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/hexo-blog\source\_posts\Redis项目及原理总结\cache1.png" srcset="/img/loading.gif" lazyload alt="消息队列实现异步更新缓存" style="zoom: 50%;">
+</li>
+<li><p>基于Canal的异步通知</p>
+<img src="/2025/08/20/Redis%E9%A1%B9%E7%9B%AE%E5%8F%8A%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/hexo-blog\source\_posts\Redis项目及原理总结\cache2.png" srcset="/img/loading.gif" lazyload alt="基于Canal实现异步更新缓存" style="zoom:50%;">
 
+<p>binlog记录了所有DDL（数据定义语言）和DML（数据操纵语言）的语句，而不记录数据查询语句</p>
+</li>
+</ol>
+</blockquote>
 <h4 id="缓存穿透问题"><a href="#缓存穿透问题" class="headerlink" title="缓存穿透问题"></a>缓存穿透问题</h4><p>定义：客户端请求的数据在缓存中和数据库中都<strong>不存在</strong>，这样缓存永远都不会生效，请求全部向数据库发起，对数据库造成大量访问压力</p>
 <p>解决方案：</p>
 <ol>
@@ -1122,8 +1137,58 @@
 
 
 
+<h3 id="2-8用户签到"><a href="#2-8用户签到" class="headerlink" title="2.8用户签到"></a>2.8用户签到</h3><ol>
+<li><p>BitMap的用法</p>
+<p>在统计签到信息等业务中，把每一个bit位对应当月的每一天，就形成了映射关系。用0和1表示状态，这种思路就称为位图（BitMap） </p>
+</li>
+<li><p>操作命令：</p>
+<ol>
+<li><strong>SETBIT</strong>：向指定位置(offset)存入一个0或1</li>
+<li><strong>GETBIT</strong>：获取指定位置(offset)的bit值</li>
+<li><strong>BITCOUNT</strong>：统计BitMap中值为1的bit位的数量</li>
+<li><strong>BITFIELD</strong>：操作(查询、修改、自增)BitMap中bit数组中的指定位置(offset)的值</li>
+<li><strong>BITFIELD_RO</strong>：获取BitMap中bit数组，并以十进制形式返回</li>
+<li><strong>BITOP</strong>：将多个BitMap的结果做位运算(与、或、异或)</li>
+<li><strong>BITPOS</strong>：查找bit数组中指定范围内第一个0或1出现的位置</li>
+</ol>
+</li>
+<li><p>业务需求</p>
+<p>实现签到接口，将当前用户当天签到信息保存到Redis中：</p>
+<p>实现代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">sign</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">// 1. 获取当前登录用户</span><br>    <span class="hljs-type">Long</span> <span class="hljs-variable">userId</span> <span class="hljs-operator">=</span> UserHolder.getUser().getId();<br>    <span class="hljs-comment">// 2. 获取日期</span><br>    <span class="hljs-type">LocalDateTime</span> <span class="hljs-variable">now</span> <span class="hljs-operator">=</span> LocalDateTime.now();<br>    <span class="hljs-comment">// 3. 拼接key</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> USER_SIGN_KEY+ userId + now.format(DateTimeFormatter.ofPattern(<span class="hljs-string">&quot;:yyyyMM&quot;</span>));<br>    <span class="hljs-comment">// 4. 获取今天是本月第几号</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">dayOfMonth</span> <span class="hljs-operator">=</span> now.getDayOfMonth();<br>    <span class="hljs-comment">// 5. 写入Redis中 setbit key offset 1</span><br>    stringRedisTemplate.opsForValue().setBit(key, dayOfMonth - <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>);<br>    <span class="hljs-keyword">return</span> Result.ok();<br>&#125;<br></code></pre></td></tr></table></figure>
 
+<p>统计连续签到天数（从最后一次签到开始向前统计，直至第一次未签到位为止，计算总签到次数）</p>
+<p>实现思路：1. 通过BITFIELD key GET u[dayOfMonth] 0，然后通过与1作与运算得到最后一个bit位，然后通过右移操作实现统计</p>
+<p>实现代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">signCount</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">// 1. 获取当前登录用户</span><br>    <span class="hljs-type">Long</span> <span class="hljs-variable">userId</span> <span class="hljs-operator">=</span> UserHolder.getUser().getId();<br>    <span class="hljs-comment">// 2. 获取日期</span><br>    <span class="hljs-type">LocalDateTime</span> <span class="hljs-variable">now</span> <span class="hljs-operator">=</span> LocalDateTime.now();<br>    <span class="hljs-comment">// 3. 拼接key</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> USER_SIGN_KEY+ userId + now.format(DateTimeFormatter.ofPattern(<span class="hljs-string">&quot;:yyyyMM&quot;</span>));<br>    <span class="hljs-comment">// 4. 获取今天是本月第几号</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">dayOfMonth</span> <span class="hljs-operator">=</span> now.getDayOfMonth();<br>    <span class="hljs-comment">// 5. 获取本月截至今天为止的所有签到记录，返回的是一个十进制数字  bitfield key get u(day) 0</span><br>    List&lt;Long&gt; results = stringRedisTemplate.opsForValue().bitField(key,<br>            BitFieldSubCommands.create().<br>                    get(BitFieldSubCommands.BitFieldType.unsigned(dayOfMonth)).<br>                    valueAt(<span class="hljs-number">0</span>)<br>    );<br>    <span class="hljs-keyword">if</span>(results.isEmpty() || results == <span class="hljs-literal">null</span>)&#123;<br>        <span class="hljs-comment">// 没有签到结果</span><br>        <span class="hljs-keyword">return</span> Result.ok(<span class="hljs-number">0</span>);<br>    &#125;<br>    <span class="hljs-type">Long</span> <span class="hljs-variable">num</span> <span class="hljs-operator">=</span> results.get(<span class="hljs-number">0</span>);<br>    <span class="hljs-keyword">if</span>(num == <span class="hljs-number">0</span>|| num == <span class="hljs-literal">null</span> )&#123;<br>        <span class="hljs-keyword">return</span> Result.ok(<span class="hljs-number">0</span>);<br>    &#125;<br><br>    <span class="hljs-comment">// 6. 循环遍历</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">while</span>(<span class="hljs-literal">true</span>)&#123;<br>        <span class="hljs-comment">// 让数字与1做与运算，得到数字最后一个比特位</span><br>        <span class="hljs-comment">// 判断比特位是否为0</span><br>        <span class="hljs-keyword">if</span>((num &amp; <span class="hljs-number">1</span>) == <span class="hljs-number">0</span>)&#123;<br>            <span class="hljs-comment">// 如果是0，说明没签到，结束</span><br>            <span class="hljs-keyword">break</span>;<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-comment">// 如果不为0，说明签到，计数器加一</span><br>            count ++;<br>            <span class="hljs-comment">// 数字右移一位，进入下一次循环</span><br>            num = num &gt;&gt; <span class="hljs-number">1</span>;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> Result.ok(count);<br>&#125;<br></code></pre></td></tr></table></figure>
 
+<h3 id="2-9-UV统计"><a href="#2-9-UV统计" class="headerlink" title="2.9 UV统计"></a>2.9 UV统计</h3><ol>
+<li><p>概念理解</p>
+<ol>
+<li>UV：全称Unique Visitor，也叫独立访客量，是指通过互联网访问、浏览这个网页的自然人。1天内，同一个用户多次访问网站，只记录1次；</li>
+<li>PV：全称Page View，也叫页面访问量或点击量，用户每访问网站的一个页面，记录一次PV，用户多次打开页面，记录多次PV。</li>
+</ol>
+</li>
+<li><p>HyperLogLog（HLL）：是从Loglog算法派生的概率算法，用于确定非常大的集合的基数，而不需要存储其所有值。Redis中的HLL是基于string结构实现的，单个HLL的<strong>内存永远小于16kb</strong>，但代价是，其测量结果是有概率性的，<strong>有小于0.81%的误差</strong>，不过对于UV统计，可以忽略。</p>
+</li>
+<li><p>相关命令：</p>
+<ol>
+<li>PFADD key element [element …] 添加元素</li>
+<li>PFCOUNT key [key …] 统计总量</li>
+<li>PFMERGE destkey sourcekey [sourcekey …]</li>
+</ol>
+<blockquote>
+<p>注意：添加多次相同元素，只记录1次，所以HLL非常适合做UV统计</p>
+</blockquote>
+</li>
+<li><p>测试UV统计：利用单元测试，向HLL中添加100万条数据，查看内存占用和统计数量</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">testHyperLogLog</span><span class="hljs-params">()</span>&#123;<br>    String[] values = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[<span class="hljs-number">1000</span>];<br>    <span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000000</span>; i++) &#123;<br>        j = i % <span class="hljs-number">1000</span>; <span class="hljs-comment">//(j=0~999)</span><br>        values[j] = <span class="hljs-string">&quot;user_&quot;</span> + i;<br>        <span class="hljs-keyword">if</span>(j == <span class="hljs-number">999</span>)&#123;<br>            stringRedisTemplate.opsForHyperLogLog().add(<span class="hljs-string">&quot;hl_test&quot;</span>,values); <span class="hljs-comment">//每隔1000条存入hl中一次，一共保存一百万条数据</span><br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// 统计uv</span><br>    <span class="hljs-type">Long</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForHyperLogLog().size(<span class="hljs-string">&quot;hl_test&quot;</span>);<br>    System.out.println(<span class="hljs-string">&quot;count = &quot;</span> + count);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>运行结果为：count &#x3D; 997593</p>
+</li>
+</ol>
+</li>
+</ol>
 <h2 id="3-Redis的分布式"><a href="#3-Redis的分布式" class="headerlink" title="3. Redis的分布式"></a>3. Redis的分布式</h2><h3 id="3-1-Redis持久化"><a href="#3-1-Redis持久化" class="headerlink" title="3.1 Redis持久化"></a>3.1 Redis持久化</h3><h4 id="RDB-Redis-Database-Backup-File"><a href="#RDB-Redis-Database-Backup-File" class="headerlink" title="RDB(Redis Database Backup File)"></a>RDB(Redis Database Backup File)</h4><p>Redis数据备份文件，也叫Redis数据快照，就是将内存中的所有数据都记录到磁盘中。当故障后，从磁盘读取快照文件，恢复数据。快照文件称为RDB文件，默认保存在当前运行目录。  </p>
 <ul>
 <li>save命令：由Redis主进程来执行RDB，会阻塞所有命令  </li>
@@ -1181,7 +1246,37 @@
 <td>对数据安全性较高</td>
 </tr>
 </tbody></table>
-<h3 id="3-2-Redis主从集群"><a href="#3-2-Redis主从集群" class="headerlink" title="3.2 Redis主从集群"></a>3.2 Redis主从集群</h3>
+<h3 id="3-2-Redis主从集群"><a href="#3-2-Redis主从集群" class="headerlink" title="3.2 Redis主从集群"></a>3.2 Redis主从集群</h3><h4 id="搭建主从架构"><a href="#搭建主从架构" class="headerlink" title="搭建主从架构"></a>搭建主从架构</h4><p>单节点Redis的并发能力有限，要进一步提高Redis的并发能力，就需要搭建主从集群，实现读写分离。</p>
+<ol>
+<li><p>准备实例和配置</p>
+<p>要在同一台虚拟机开启3个实例，需要准备三份不同的配置文件和目录，配置文件所在的目录就是工作目录。</p>
+<ul>
+<li>创建三个目录</li>
+<li>在每个目录下设置配置文件（持久化为默认的RDB模式）</li>
+<li>修改每个实例的端口及工作目录</li>
+<li>修改每个实例的声明ip（由于在虚拟机内配置，虚拟机本身就有多个IP，为避免将来混乱，需要指定每个实例绑定ip信息 replica-announce-ip xxx.xxx.xxx.xxx）</li>
+</ul>
+</li>
+<li><p>启动实例：redis-service 目录&#x2F;redis.conf</p>
+</li>
+<li><p>开启主从关系</p>
+<ul>
+<li><p>配置主从关系，使用replicaof 或者slaveof命令</p>
+</li>
+<li><p>有临时&#x2F;永久两种模式</p>
+<ul>
+<li><p>永久生效</p>
+<p>在redis.conf 中添加一行配置：slaveof(或者replicaof) <masterip> <masterport></masterport></masterip></p>
+</li>
+<li><p>临时生效（重启后失效）</p>
+<p>使用redis-cli客户端连接redis服务，执行slaveof命令：slaveof(或者replicaof)  <masterip> <masterport></masterport></masterip></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="数据同步原理"><a href="#数据同步原理" class="headerlink" title="数据同步原理"></a>数据同步原理</h4>
                 
               </div>
             
@@ -1233,7 +1328,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年9月16日</div>
+          <div>2025年10月9日</div>
         </div>
       
       

@@ -27,8 +27,13 @@
 <meta property="og:description" content="Docker学习记录快速入门 镜像与容器 当我们利用Docker安装应用的时候，Docker会自动搜索并下载应用镜像(image)。镜像不仅包含应用本身，还包含应用所需要的环境、配置、系统函数库。 Docker会在运行镜像的时候创建一个隔离环境，称为容器(container)  镜像仓库 存储和管理镜像的平台，Docker官方维护了一个公共的仓库     常用命令 案例： 123456docker">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2025/09/16/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source_posts/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/1.png">
+<meta property="og:image" content="http://example.com/2025/09/16/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/2.png">
+<meta property="og:image" content="http://example.com/2025/09/16/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source_posts/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/3.png">
+<meta property="og:image" content="http://example.com/2025/09/16/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/4.png">
+<meta property="og:image" content="http://example.com/2025/09/16/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/5.png">
+<meta property="og:image" content="http://example.com/2025/09/16/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/6.png">
 <meta property="article:published_time" content="2025-09-16T08:03:10.000Z">
-<meta property="article:modified_time" content="2025-09-17T10:42:55.069Z">
+<meta property="article:modified_time" content="2025-09-27T08:23:33.448Z">
 <meta property="article:author" content="hejiaman">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2025/09/16/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source_posts/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/1.png">
@@ -224,7 +229,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          335 字
+          1.3k 字
         
       </span>
     
@@ -235,7 +240,7 @@
         
         
         
-          3 分钟
+          12 分钟
         
       </span>
     
@@ -298,9 +303,150 @@
 <p>-p 3306:3306：设置端口映射（宿主机端口：容器内端口）。如果要部署多个容器，宿主机端口需要修改，连接时只能联通宿主机，而宿主机端口唯一，容器会被分配到不同的ip，我们无法访问，但可以通过端口映射，也就是说多个容器它的容器内端口是一致的。</p>
 <p>-e KEY&#x3D;VALUE：设置环境变量，不同的镜像所需不同，通过查看官方文档来设置。</p>
 <p>mysql：指定运行时的镜像名称，完整版由两部分组成：[repository]:[tag]，镜像名：版本，省略版本默认是最新版本</p>
-<p>常用命令：</p>
-<p>​</p>
 </li>
+<li><p>常见命令：</p>
+<p>​    <img src="/2025/09/16/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\docker学习记录\2.png" srcset="/img/loading.gif" lazyload alt="docker常见命令图示" style="zoom:67%;"></p>
+<p>​    更多命令：<a target="_blank" rel="noopener" href="https://www.runoob.com/docker/docker-command-manual.html">Docker 命令大全 | 菜鸟教程</a></p>
+</li>
+<li><p>数据卷：</p>
+<p>数据卷（volume）是一个虚拟目录，是容器内目录与宿主机目录之间映射的桥梁。</p>
+<p><img src="/2025/09/16/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source_posts\docker学习记录\3.png" srcset="/img/loading.gif" lazyload alt="映射示意图"></p>
+<p>相关命令：</p>
+<table>
+<thead>
+<tr>
+<th align="center">命令</th>
+<th align="center">说明</th>
+<th align="center">文档地址</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">docker volume create</td>
+<td align="center">创建数据卷</td>
+<td align="center">docker volume create</td>
+</tr>
+<tr>
+<td align="center">docker volume ls</td>
+<td align="center">查看所有数据卷</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">docker volume rm</td>
+<td align="center">删除指定数据卷</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">docker volume inspect</td>
+<td align="center">查看某个数据卷的详情</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">docker volume prune</td>
+<td align="center">清除数据卷</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<p><u>在执行docker run命令时，使用-v <strong>数据卷:容器内目录</strong>，可以完成数据卷挂载；</u></p>
+<p><u>如果已经创建了容器，就没办法挂载了；</u></p>
+<p><u>当创建容器时，如果挂载数据卷不存在，会<strong>自动创建数据卷</strong>。</u> </p>
+<p>例子：</p>
+<ul>
+<li>创建nginx ,修改nginx容器内html目录下index.html文件内容</li>
+<li>将静态资源部署到nginx的html目录</li>
+</ul>
+<p>执行命令：docker run -d –name nginx -p 80:80 -v html:&#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html nginx </p>
+<p>中间的**-v html:&#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html**是指创建一个名为html的数据卷，映射到容器内的目录&#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html下，而宿主机的目录是不需要我们指定的 </p>
+</li>
+<li><p>本地目录挂载</p>
+<p>例子：</p>
+<ul>
+<li>查看mysql容器，判断是否有数据卷挂载</li>
+<li>基于宿主机目录实现mysql数据目录、配置文件、初始化脚本的挂载（<a target="_blank" rel="noopener" href="https://hub.docker.com/_/mysql">查看官方mysql镜像文档</a>）</li>
+</ul>
+<p>执行命令：<strong>docker inspect mysql</strong> 查看mysql容器内的数据卷挂载情况——“Mounts”的条目</p>
+<p><u>执行docker run命令时，使用-v <strong>本地目录:容器内目录</strong> 可以完成本地目录挂载</u></p>
+<p><u>注意！本地目录必须以”&#x2F;“或者”.&#x2F;“开头，如果以别的名称开头，会被识别为数据卷而非本地目录</u></p>
+<p>​    例如： -v mysql:&#x2F;var&#x2F;lib&#x2F;mysql会被识别为一个叫做mysql的数据卷；</p>
+<p>​                -v .&#x2F;mysql:&#x2F;var&#x2F;lib&#x2F;mysql会被识别为当前目录下的mysql目录</p>
+<p>执行命令：根据官网文档查阅到容器内相应目录：&#x2F;var&#x2F;lib&#x2F;mysql数据目录、&#x2F;etc&#x2F;mysql&#x2F;conf.d配置文件目录、&#x2F;docker-entrypoint-initdb.d初始化脚本</p>
+</li>
+<li><p>自定义镜像：</p>
+<p>镜像就是包含了应用程序、程序运行的系统函数库、运行配置等文件的文件包，构建镜像的过程其实就是把上述文件打包的过程 。</p>
+<p>部署一个java应用的步骤：   ————————》构建一个java镜像的步骤</p>
+<ul>
+<li>准备一个linux服务器      ————————》      准备一个linux运行环境</li>
+<li>安装JRE并配置环境变量  ————————》      安装JRE并配置环境变量</li>
+<li>拷贝jar包                          ————————》      拷贝jar包</li>
+<li>运行jar包                          ————————》      编写运行脚本</li>
+</ul>
+<p>镜像结构：添加安装、依赖、配置等，每次操作都形成新的一层（layer），这种结构有以下的优点</p>
+<img src="/2025/09/16/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\docker学习记录\4.png" srcset="/img/loading.gif" lazyload alt="镜像结构层次示意图" style="zoom:67%;">
+
+<ul>
+<li>底层实现基础镜像（BaseImage），是应用依赖的系统函数库、环境、配置、文件等，能够复用</li>
+<li>入口（entrypoint）是镜像运行入口，一般是程序启动的脚本和参数</li>
+</ul>
+</li>
+<li><p>Dockerfile</p>
+<p>文本文件，其中包含一个个的指令，用指令来说明要执行什么操作来构建镜像。将来Docker可以根据Dockerfile帮我们构建镜像。常见指令如下：</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FROM</td>
+<td>指定基础镜像</td>
+<td>FROM centos:6</td>
+</tr>
+<tr>
+<td>ENV</td>
+<td>设置环境变量，可在后面指令使用</td>
+<td>ENV key value</td>
+</tr>
+<tr>
+<td>COPY</td>
+<td>拷贝本地文件到镜像的指定目录</td>
+<td>COPY .&#x2F;jrell.tar.gz &#x2F;tmp</td>
+</tr>
+<tr>
+<td>RUN</td>
+<td>执行Linux的shell命令，一般是安装过程的命令</td>
+<td>RUN tar -zxvf &#x2F;tmp&#x2F;jrell.tar.gz &amp;&amp; EXPORTS path&#x3D;&#x2F;tmp&#x2F;jrell:$path</td>
+</tr>
+<tr>
+<td>EXPOSE</td>
+<td>指定容器运行时监听的端口，是给镜像使用者看的</td>
+<td>EXPOSE 8080</td>
+</tr>
+<tr>
+<td>ENTRYPOINT</td>
+<td>镜像中应用的启动命令，容器运行时调用</td>
+<td>ENTRYPOINT java -jar xx.jar</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>详细语法说明，参考<a target="_blank" rel="noopener" href="https://docs.docker.com/reference/dockerfile/">官网文档</a></p>
+</blockquote>
+</li>
+<li><p>构建镜像</p>
+<ul>
+<li>Docker build -t 镜像名 Dockerfile目录 eg. docker build -t decker-demo .(.表示的是当前目录)</li>
+</ul>
+</li>
+<li><p>Docker 网络</p>
+<ul>
+<li><p>默认情况下，所有容器都是以bridge方式连接到Docker的一个虚拟网桥上</p>
+<img src="/2025/09/16/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\docker学习记录\5.png" srcset="/img/loading.gif" lazyload alt="docker 网络链接示意" style="zoom:67%;">
+</li>
+<li><p>自定义网络：加入自定义网络的容器可以通过容器名互相访问，相关命令如下：</p>
+<img src="/2025/09/16/docker%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\docker学习记录\6.png" srcset="/img/loading.gif" lazyload alt="网络操作命令" style="zoom:67%;"></li>
+</ul>
+</li>
+<li></li>
 </ul>
 
                 
@@ -333,7 +479,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年9月17日</div>
+          <div>2025年9月27日</div>
         </div>
       
       
@@ -363,6 +509,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2025/10/12/RPC%E7%9B%B8%E5%85%B3%E5%AD%A6%E4%B9%A0/" title="RPC相关学习">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">RPC相关学习</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

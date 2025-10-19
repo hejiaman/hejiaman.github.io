@@ -19,17 +19,31 @@
   <meta name="author" content="hejiaman">
   <meta name="keywords" content="">
   
-    <meta name="description" content="大模型原理及基础NLP基础参考资料：李宏毅NLP(自然语言处理)完整课程，强推！_哔哩哔哩_bilibili  overview   model&#x3D;Deep Network  音频转文本：语音辨识（speech recognition） 音频转音频：1. speech separation（从多人同时说话的音频中分离出各自的音频） 2. voice conversion（变声器） 音频转类">
+    <meta name="description" content="大模型原理及基础NLP基础参考资料：李宏毅NLP(自然语言处理)完整课程，强推！_哔哩哔哩_bilibili overview  model&#x3D;Deep Network  音频转文本：语音辨识（speech recognition）  音频转音频：1. speech separation（从多人同时说话的音频中分离出各自的音频） 2. voice conversion（变声器）  音频转类">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LLM学习记录">
 <meta property="og:url" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/index.html">
 <meta property="og:site_name" content="Barbara">
-<meta property="og:description" content="大模型原理及基础NLP基础参考资料：李宏毅NLP(自然语言处理)完整课程，强推！_哔哩哔哩_bilibili  overview   model&#x3D;Deep Network  音频转文本：语音辨识（speech recognition） 音频转音频：1. speech separation（从多人同时说话的音频中分离出各自的音频） 2. voice conversion（变声器） 音频转类">
+<meta property="og:description" content="大模型原理及基础NLP基础参考资料：李宏毅NLP(自然语言处理)完整课程，强推！_哔哩哔哩_bilibili overview  model&#x3D;Deep Network  音频转文本：语音辨识（speech recognition）  音频转音频：1. speech separation（从多人同时说话的音频中分离出各自的音频） 2. voice conversion（变声器）  音频转类">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/overview1.png">
+<meta property="og:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/overview6.png">
 <meta property="og:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/overview2.png">
+<meta property="og:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/overview5.png">
+<meta property="og:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/overview3.png">
+<meta property="og:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/overview4.png">
+<meta property="og:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/BERT1.png">
+<meta property="og:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/BERT2.png">
+<meta property="og:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/BERT3.png">
+<meta property="og:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/BERT4.png">
+<meta property="og:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/BERT5.png">
+<meta property="og:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/BERT6.png">
+<meta property="og:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/BERT7.png">
+<meta property="og:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/BERT8.png">
+<meta property="og:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/BERT9.png">
+<meta property="og:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/GPT3-1.png">
 <meta property="article:published_time" content="2025-09-16T07:56:53.000Z">
-<meta property="article:modified_time" content="2025-09-16T13:30:55.401Z">
+<meta property="article:modified_time" content="2025-09-19T09:40:15.307Z">
 <meta property="article:author" content="hejiaman">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog/source/_posts/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/overview1.png">
@@ -225,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          349 字
+          1.2k 字
         
       </span>
     
@@ -236,7 +250,7 @@
         
         
         
-          3 分钟
+          11 分钟
         
       </span>
     
@@ -279,21 +293,24 @@
               <div class="markdown-body">
                 
                 <h1 id="大模型原理及基础"><a href="#大模型原理及基础" class="headerlink" title="大模型原理及基础"></a>大模型原理及基础</h1><h2 id="NLP基础"><a href="#NLP基础" class="headerlink" title="NLP基础"></a>NLP基础</h2><p>参考资料：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1hM4y157xX/?spm_id_from=333.337.search-card.all.click&vd_source=330fcf898cf16ea7d66bda411f42e566">李宏毅NLP(自然语言处理)完整课程，强推！_哔哩哔哩_bilibili</a></p>
-<ol>
-<li><p>overview</p>
-<img src="/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\LLM学习记录\overview1.png" srcset="/img/loading.gif" lazyload alt="课程概览图" style="zoom:67%;">
+<h3 id="overview"><a href="#overview" class="headerlink" title="overview"></a>overview</h3><img src="/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\LLM学习记录\overview1.png" srcset="/img/loading.gif" lazyload alt="课程概览图" style="zoom:67%;">
 
 <p>model&#x3D;Deep Network</p>
 <ul>
-<li>音频转文本：语音辨识（speech recognition）</li>
-<li>音频转音频：1. speech separation（从多人同时说话的音频中分离出各自的音频） 2. voice conversion（变声器）</li>
-<li>音频转类别：1. speaker recognition    2. keyword spotting（例如：唤醒词检测）</li>
-<li>文本转音频：语音合成</li>
-<li>文本转文本：1. translation 2. summarization 3. chat-bot 4. question answering</li>
-<li>文本转类别：文本分类</li>
-</ul>
+<li><p>音频转文本：语音辨识（speech recognition）</p>
 </li>
-<li><p>Overview of NLP tasks</p>
+<li><p>音频转音频：1. speech separation（从多人同时说话的音频中分离出各自的音频） 2. voice conversion（变声器）</p>
+</li>
+<li><p>音频转类别：1. speaker recognition    2. keyword spotting（例如：唤醒词检测）</p>
+</li>
+<li><p>文本转音频：语音合成</p>
+</li>
+<li><p>文本转文本：1. translation 2. summarization 3. chat-bot 4. question answering</p>
+</li>
+<li><p>文本转类别：文本分类</p>
+</li>
+</ul>
+<h3 id="Overview-of-NLP-tasks"><a href="#Overview-of-NLP-tasks" class="headerlink" title="Overview of NLP tasks"></a>Overview of NLP tasks</h3><p>​	<img src="/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\LLM学习记录\overview6.png" srcset="/img/loading.gif" lazyload alt="NLP任务类型图示" style="zoom:67%;"></p>
 <ol>
 <li><p>Part-of-Speech(POS) tagging：自动标记句子中的词性（eg. verb, adjective, noun）</p>
 <ol>
@@ -375,9 +392,111 @@
 <li>output: sequence</li>
 </ol>
 </li>
-<li></li>
+<li><p>Task-oriented ：任务导向的chatting，比如预定酒店</p>
+<p>如何训练这种模型？</p>
+<img src="/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\LLM学习记录\overview5.png" srcset="/img/loading.gif" lazyload alt="task-oriented dialogue" style="zoom:67%;">
+
+<ul>
+<li><p>通过NLU（natural language understanding）模型得到状态</p>
+</li>
+<li><p>将上下文作为state输入</p>
+</li>
+<li><p>通过policy模型输出规定范围内要采取哪个action（比如还没掌握订房人数，询问人数）</p>
+</li>
+<li><p>将action通过NLG（natural language generating）模型生成回复文本</p>
+</li>
+</ul>
+<img src="/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\LLM学习记录\overview3.png" srcset="/img/loading.gif" lazyload alt="task-oriented任务训练示意" style="zoom:50%;">
+
+<img src="/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\LLM学习记录\overview4.png" srcset="/img/loading.gif" lazyload alt="NLU示例图" style="zoom:50%;">
+
+
+</li>
+<li><p>knowledge graph</p>
+<ol>
+<li>抽取entity：通过Name Entity Recognition(NER)抽取实体，比如抽取人名、组织名、地名等，这取决于目前的任务。输入为sequence ，输出为每个token的类别（类似POS tagging）</li>
+<li>抽取relation：如果relation是有限的，就是一个分类问题，输入实体关系的信息，输出relation</li>
 </ol>
 </li>
+</ol>
+<h3 id="BERT-and-its-family"><a href="#BERT-and-its-family" class="headerlink" title="BERT and its family"></a>BERT and its family</h3><ol>
+<li><p>pre-train model</p>
+<ul>
+<li>传统的word2vec，只是学习word和vector的映射，无法识别上下文，可能出现相同word不同含义的情况。所以，为了考虑上下文的内容，提出了contextualized word embedding，能够做到同一个词汇，在不同的语境下有不同的embedding</li>
+</ul>
+</li>
+<li><p>how to fine-tune  (如何把pre-train model改造成适应不同具体任务的模型呢？)</p>
+<ol>
+<li><p>输入为多个句子时：将两个句子通过特殊分割符号连接成同一个句子作为输入</p>
+</li>
+<li><p>输出为one class时：在pre-train model后接一个task specific（任务分类）的model</p>
+</li>
+<li><p>输出为class for each token： 类似one class，只是要给每个token都输出一个class</p>
+</li>
+<li><p>输出为copy from input：训练一个模型输出start和end，用于定位输入中要copy的片段</p>
+</li>
+<li><p>输出为general sequence： <img src="/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\LLM学习记录\BERT1.png" srcset="/img/loading.gif" lazyload alt="decoder也用上pre-train model" style="zoom:50%;"></p>
+</li>
+<li><p>如何微调？</p>
+<img src="/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\LLM学习记录\BERT2.png" srcset="/img/loading.gif" lazyload alt="微调模型的两种方式" style="zoom:67%;">
+
+<p>根据结果表明，将pre-trained模型和任务特定模型一起微调的效果更优。</p>
+<p>另一个问题是，pre-trained模型参数非常大，是否可以只调整一部分呢？可以，在model中加一些层作为Adaptor，只是调整adaptor部分的参数就可以。</p>
+<img src="/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\LLM学习记录\BERT3.png" srcset="/img/loading.gif" lazyload alt="添加Adaptor的fine-tune" style="zoom:67%;">
+</li>
+<li><p>自监督学习</p>
+<p>在自监督学习中，系统用部分的输入来预测另外一部分的输入</p>
+<img src="/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\LLM学习记录\BERT4.png" srcset="/img/loading.gif" lazyload alt="监督学习vs自监督学习" style="zoom:50%;">
+
+<p>mask input（掩码）来实现自监督</p>
+<img src="/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\LLM学习记录\BERT5.png" srcset="/img/loading.gif" lazyload alt="BERT中的掩码机制" style="zoom:50%;">
+
+<ul>
+<li><p>要掩码那些token能够优化训练呢？</p>
+<img src="/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\LLM学习记录\BERT6.png" srcset="/img/loading.gif" lazyload alt="一些masking方法" style="zoom:50%;">
+
+<ul>
+<li><p>SpanBert</p>
+<img src="/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\LLM学习记录\BERT7.png" srcset="/img/loading.gif" lazyload alt="SpanBert提出的训练方法" style="zoom:50%;">
+
+<p>SpanBert 提出的 Span Boundary Objective（SBO）是一种新的预训练任务，其核心思想是利用被掩码的文本片段（span）左右两边的边界 token 来预测整个 span 的内容。</p>
+</li>
+<li><p>BERT适用于语义理解，但不擅长generation的任务（针对自左向右生成文字的情况下）。所以BERT不擅长seq2seq的model.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Sentence Level</p>
+<p>如何产生一个Sentence level的embedding?</p>
+<ol>
+<li><strong>Skip Thought</strong>：借鉴word2vec的skip-gram，用“编码器+双解码器”架构——编码器把中心句转成固定向量，两个解码器分别用这一向量生成中心句的前一句和后一句，通过“生成上下文句子”学习句子表示。</li>
+<li><strong>Quick Thought</strong>：优化Skip Thought的低效，把“生成句子”改成“分类判断”——用编码器分别处理中心句和候选句，通过分类器判断候选句是否是中心句的上下文（正样本为真实上下文，负样本为随机句子），以分类任务学习句子表示。</li>
+</ol>
+<img src="/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\LLM学习记录\BERT8.png" srcset="/img/loading.gif" lazyload alt="sentence层次的" style="zoom:50%;">
+
+<ol start="3">
+<li><p><strong>NSP</strong>：Next sentence prediction，判断<strong>两个句子是否为连续的上下文</strong>（如 “今天天气很好” 和 “我们去公园” 是连续句，和 “猫爱吃鱼” 是非连续句）</p>
+<img src="/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\LLM学习记录\BERT9.png" srcset="/img/loading.gif" lazyload alt="Next sentence prediction" style="zoom:50%;">
+</li>
+<li><p><strong>SOP</strong>：Sentence order prediction，判断<strong>一对句子的顺序是否正确</strong>（如 “先吃早餐”→“再去上班” 是正确顺序，反之则错误）</p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="GPT-3"><a href="#GPT-3" class="headerlink" title="GPT-3"></a>GPT-3</h3><ol>
+<li><p>如何理解few-short learning ,one-shot learning, zero-shot learning？</p>
+<img src="/2025/09/16/LLM%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/hexo-blog\source\_posts\LLM学习记录\GPT3-1.png" srcset="/img/loading.gif" lazyload alt="in-context learning示例图" style="zoom:50%;">
+</li>
+<li><p>GPT-3在面对NLI问题时不擅长</p>
+<ol>
+<li>NLI（Natural Language Inference，自然语言推断）问题：NLI 任务的输入固定为 “一对句子”——<strong>前提（P，通常是客观陈述的事实）</strong> 和<strong>假设（H，基于前提提出的判断或猜想）</strong>，模型需要输出二者的逻辑关系</li>
+</ol>
+</li>
+<li></li>
+<li></li>
 </ol>
 <h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><h2 id="GPT理论"><a href="#GPT理论" class="headerlink" title="GPT理论"></a>GPT理论</h2><h2 id="GPT的实践"><a href="#GPT的实践" class="headerlink" title="GPT的实践"></a>GPT的实践</h2><h1 id="大模型实践应用及开发"><a href="#大模型实践应用及开发" class="headerlink" title="大模型实践应用及开发"></a>大模型实践应用及开发</h1><h2 id="HuggingFace"><a href="#HuggingFace" class="headerlink" title="HuggingFace"></a>HuggingFace</h2><h2 id="大模型基础"><a href="#大模型基础" class="headerlink" title="大模型基础"></a>大模型基础</h2><h2 id="大模型开发"><a href="#大模型开发" class="headerlink" title="大模型开发"></a>大模型开发</h2><h3 id="模型微调"><a href="#模型微调" class="headerlink" title="模型微调"></a>模型微调</h3><h3 id="langchain"><a href="#langchain" class="headerlink" title="langchain"></a>langchain</h3><h3 id="Agent"><a href="#Agent" class="headerlink" title="Agent"></a>Agent</h3><h1 id="其他相关"><a href="#其他相关" class="headerlink" title="其他相关"></a>其他相关</h1>
                 
@@ -410,7 +529,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年9月16日</div>
+          <div>2025年9月19日</div>
         </div>
       
       
