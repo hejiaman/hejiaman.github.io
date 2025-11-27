@@ -1,0 +1,1363 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hejiaman">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="RAG项目实践——代码审查助手一、理论基础一、项目概述1.1 项目背景问题：  传统代码审查依赖人工，效率低、成本高 缺乏统一的代码质量评估标准 难以快速发现安全漏洞和性能问题  解决方案：  基于Multi-Agent架构的AI代码审查系统 结合RAG知识增强和Tool调用能力 自动化代码质量、安全、性能分析  1.2 项目特点 ✅ Multi-Agent架构：3个专业Agent并行工作（质量、">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RAG项目实践——代码审查助手">
+<meta property="og:url" content="http://example.com/2025/11/26/RAG%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E4%BB%A3%E7%A0%81%E5%AE%A1%E6%9F%A5%E5%8A%A9%E6%89%8B/index.html">
+<meta property="og:site_name" content="Barbara">
+<meta property="og:description" content="RAG项目实践——代码审查助手一、理论基础一、项目概述1.1 项目背景问题：  传统代码审查依赖人工，效率低、成本高 缺乏统一的代码质量评估标准 难以快速发现安全漏洞和性能问题  解决方案：  基于Multi-Agent架构的AI代码审查系统 结合RAG知识增强和Tool调用能力 自动化代码质量、安全、性能分析  1.2 项目特点 ✅ Multi-Agent架构：3个专业Agent并行工作（质量、">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-26T06:56:23.000Z">
+<meta property="article:modified_time" content="2025-11-26T08:05:26.504Z">
+<meta property="article:author" content="hejiaman">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>RAG项目实践——代码审查助手 - Barbara</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":60,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Barbara</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/background/back2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="RAG项目实践——代码审查助手"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-11-26 14:56" pubdate>
+          2025年11月26日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          56 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">RAG项目实践——代码审查助手</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="RAG项目实践——代码审查助手"><a href="#RAG项目实践——代码审查助手" class="headerlink" title="RAG项目实践——代码审查助手"></a>RAG项目实践——代码审查助手</h1><h2 id="一、理论基础"><a href="#一、理论基础" class="headerlink" title="一、理论基础"></a>一、理论基础</h2><h2 id="一、项目概述"><a href="#一、项目概述" class="headerlink" title="一、项目概述"></a>一、项目概述</h2><h3 id="1-1-项目背景"><a href="#1-1-项目背景" class="headerlink" title="1.1 项目背景"></a>1.1 项目背景</h3><p><strong>问题：</strong></p>
+<ul>
+<li>传统代码审查依赖人工，效率低、成本高</li>
+<li>缺乏统一的代码质量评估标准</li>
+<li>难以快速发现安全漏洞和性能问题</li>
+</ul>
+<p><strong>解决方案：</strong></p>
+<ul>
+<li>基于Multi-Agent架构的AI代码审查系统</li>
+<li>结合RAG知识增强和Tool调用能力</li>
+<li>自动化代码质量、安全、性能分析</li>
+</ul>
+<h3 id="1-2-项目特点"><a href="#1-2-项目特点" class="headerlink" title="1.2 项目特点"></a>1.2 项目特点</h3><ul>
+<li>✅ <strong>Multi-Agent架构</strong>：3个专业Agent并行工作（质量、安全、性能）</li>
+<li>✅ <strong>RAG知识增强</strong>：向量检索 + 专业知识库</li>
+<li>✅ <strong>Tool调用能力</strong>：静态分析工具 + LLM深度分析</li>
+<li>✅ <strong>并行执行</strong>：CompletableFuture实现Agent并行</li>
+<li>✅ <strong>可扩展设计</strong>：BaseAgent抽象，易于添加新Agent</li>
+</ul>
+<h3 id="1-3-技术栈"><a href="#1-3-技术栈" class="headerlink" title="1.3 技术栈"></a>1.3 技术栈</h3><table>
+<thead>
+<tr>
+<th>层级</th>
+<th>技术</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>框架</strong></td>
+<td>Spring Boot 3.1.5</td>
+</tr>
+<tr>
+<td><strong>LLM框架</strong></td>
+<td>LangChain4j</td>
+</tr>
+<tr>
+<td><strong>向量数据库</strong></td>
+<td>InMemoryEmbeddingStore (可扩展Milvus)</td>
+</tr>
+<tr>
+<td><strong>Embedding模型</strong></td>
+<td>Ollama (nomic-embed-text)</td>
+</tr>
+<tr>
+<td><strong>LLM</strong></td>
+<td>阿里云通义千问 (兼容OpenAI接口)</td>
+</tr>
+<tr>
+<td><strong>数据库</strong></td>
+<td>MySQL + MyBatis Plus</td>
+</tr>
+<tr>
+<td><strong>缓存</strong></td>
+<td>Redis</td>
+</tr>
+<tr>
+<td><strong>ORM</strong></td>
+<td>MyBatis Plus 3.5.7</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="二、技术架构"><a href="#二、技术架构" class="headerlink" title="二、技术架构"></a>二、技术架构</h2><h3 id="2-1-整体架构"><a href="#2-1-整体架构" class="headerlink" title="2.1 整体架构"></a>2.1 整体架构</h3><figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs sqf">┌─────────────────────────────────────────────────────────────┐<br>│                        Controller层                           │<br>│  ┌────────────────┐  ┌────────────────┐                    │<br>│  │ CodeReviewCtrl │  │  HealthCtrl    │                    │<br>│  └────────┬───────┘  └────────────────┘                    │<br>└───────────┼──────────────────────────────────────────────────┘<br>            │<br>┌───────────┼──────────────────────────────────────────────────┐<br>│           │            Service层                              │<br>│  ┌────────▼────────┐                                         │<br>│  │ CodeReviewService│  业务编排、报告生成                      │<br>│  └────────┬────────┘                                         │<br>└───────────┼──────────────────────────────────────────────────┘<br>            │<br>┌───────────┼──────────────────────────────────────────────────┐<br>│           │            <span class="hljs-built_in">Agent</span>层                                │<br>│  ┌────────▼────────┐                                         │<br>│  │OrchestratorAgent│  编排器，协调多个<span class="hljs-built_in">Agent</span>                    │<br>│  └────────┬────────┘                                         │<br>│           │                                                   │<br>│  ┌────────┼────────┐  ┌──────────────┐  ┌──────────────┐  │<br>│  │        │        │  │              │  │              │  │<br>│  ▼        ▼        ▼  ▼              ▼  ▼              ▼  │<br>│ CodeAnalysis Security Performance    (可扩展新<span class="hljs-built_in">Agent</span>)        │<br>│    <span class="hljs-built_in">Agent</span>      <span class="hljs-built_in">Agent</span>     <span class="hljs-built_in">Agent</span>                              │<br>│     │          │         │                                  │<br>│     └──────────┴─────────┘                                  │<br>│              │                                               │<br>│     ┌────────▼────────┐                                     │<br>│     │   BaseAgent     │  抽象基类，提供LLM调用能力            │<br>│     └─────────────────┘                                     │<br>└──────────────────────────────────────────────────────────────┘<br>            │<br>┌───────────┼──────────────────────────────────────────────────┐<br>│           │            Tool层                                 │<br>│  ┌────────▼────────┐  ┌──────────────┐  ┌──────────────┐  │<br>│  │CodeAnalysisTool │  │SecurityScanner│  │Performance   │  │<br>│  │                 │  │    Tool      │  │  AnalyzerTool│  │<br>│  └─────────────────┘  └──────────────┘  └──────────────┘  │<br>└──────────────────────────────────────────────────────────────┘<br>            │<br>┌───────────┼──────────────────────────────────────────────────┐<br>│           │            RAG层                                  │<br>│  ┌────────▼────────┐                                         │<br>│  │KnowledgeBase    │  向量检索 + 知识库                        │<br>│  │    Service      │                                         │<br>│  └────────┬────────┘                                         │<br>│           │                                                   │<br>│  ┌────────▼────────┐  ┌──────────────┐                     │<br>│  │ EmbeddingModel  │  │ EmbeddingStore│                     │<br>│  │  (Ollama)       │  │  (InMemory)   │                     │<br>│  └─────────────────┘  └──────────────┘                     │<br>└──────────────────────────────────────────────────────────────┘<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-核心设计模式"><a href="#2-2-核心设计模式" class="headerlink" title="2.2 核心设计模式"></a>2.2 核心设计模式</h3><h4 id="2-2-1-模板方法模式"><a href="#2-2-1-模板方法模式" class="headerlink" title="2.2.1 模板方法模式"></a>2.2.1 模板方法模式</h4><ul>
+<li><strong>BaseAgent</strong>：定义Agent执行流程模板</li>
+<li><strong>子类实现</strong>：CodeAnalysisAgent、SecurityAgent等实现具体逻辑</li>
+</ul>
+<h4 id="2-2-2-策略模式"><a href="#2-2-2-策略模式" class="headerlink" title="2.2.2 策略模式"></a>2.2.2 策略模式</h4><ul>
+<li><strong>LLM配置</strong>：支持多个LLM提供商（OpenAI、通义千问、Kimi）</li>
+<li><strong>Embedding模型</strong>：可替换（Ollama、OpenAI等）</li>
+</ul>
+<h4 id="2-2-3-工厂模式"><a href="#2-2-3-工厂模式" class="headerlink" title="2.2.3 工厂模式"></a>2.2.3 工厂模式</h4><ul>
+<li><strong>LLMConfig</strong>：根据配置创建不同的ChatLanguageModel</li>
+<li><strong>VectorStoreConfig</strong>：创建EmbeddingModel和EmbeddingStore</li>
+</ul>
+<hr>
+<h2 id="三、核心模块详解"><a href="#三、核心模块详解" class="headerlink" title="三、核心模块详解"></a>三、核心模块详解</h2><h3 id="3-1-Agent层"><a href="#3-1-Agent层" class="headerlink" title="3.1 Agent层"></a>3.1 Agent层</h3><h4 id="3-1-1-BaseAgent（基类）"><a href="#3-1-1-BaseAgent（基类）" class="headerlink" title="3.1.1 BaseAgent（基类）"></a>3.1.1 BaseAgent（基类）</h4><p><strong>职责：</strong></p>
+<ul>
+<li>提供LLM调用能力</li>
+<li>定义Agent执行接口</li>
+</ul>
+<p><strong>关键代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BaseAgent</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">protected</span> ChatLanguageModel chatModel;<br>    <br>    <span class="hljs-comment">// 抽象方法：获取Agent名称</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> String <span class="hljs-title function_">getAgentName</span><span class="hljs-params">()</span>;<br>    <br>    <span class="hljs-comment">// 抽象方法：执行分析任务</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> AgentResult <span class="hljs-title function_">execute</span><span class="hljs-params">(AgentTask task)</span>;<br>    <br>    <span class="hljs-comment">// 模板方法：调用LLM</span><br>    <span class="hljs-keyword">protected</span> String <span class="hljs-title function_">callLLM</span><span class="hljs-params">(String prompt)</span> &#123;<br>        <span class="hljs-keyword">return</span> chatModel.generate(prompt);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>设计思路：</strong></p>
+<ul>
+<li>所有Agent继承BaseAgent，复用LLM调用逻辑</li>
+<li>子类只需实现具体的分析逻辑</li>
+</ul>
+<hr>
+<h4 id="3-1-2-CodeAnalysisAgent（代码质量分析Agent）"><a href="#3-1-2-CodeAnalysisAgent（代码质量分析Agent）" class="headerlink" title="3.1.2 CodeAnalysisAgent（代码质量分析Agent）"></a>3.1.2 CodeAnalysisAgent（代码质量分析Agent）</h4><p><strong>职责：</strong></p>
+<ul>
+<li>分析代码质量、可读性、可维护性</li>
+<li>检测代码坏味道</li>
+<li>计算代码复杂度</li>
+</ul>
+<p><strong>执行流程：</strong></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">1.</span> 使用CodeAnalysisTool分析代码结构<br>   ├─ 统计代码行数<br>   ├─ 统计类和方法数量<br>   └─ 检测代码坏味道（长方法、魔法数字、深层嵌套等）<br><br><span class="hljs-bullet">2.</span> 计算圈复杂度<br>   └─ 统计决策点（if、for、while等）<br><br><span class="hljs-bullet">3.</span> 从知识库检索相关最佳实践<br>   └─ RAG向量检索<br><br><span class="hljs-bullet">4.</span> 构建Prompt，调用LLM深度分析<br>   ├─ 代码信息<br>   ├─ 检测到的代码坏味道<br>   ├─ 相关最佳实践<br>   └─ 待分析代码<br><br><span class="hljs-bullet">5.</span> 计算质量评分<br>   └─ 根据代码坏味道和复杂度扣分<br><br><span class="hljs-bullet">6.</span> 提取改进建议<br>   └─ 从LLM输出中提取建议<br></code></pre></td></tr></table></figure>
+
+<p><strong>关键代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> AgentResult <span class="hljs-title function_">execute</span><span class="hljs-params">(AgentTask task)</span> &#123;<br>    <span class="hljs-comment">// 1. 工具分析</span><br>    <span class="hljs-type">CodeStructure</span> <span class="hljs-variable">structure</span> <span class="hljs-operator">=</span> codeAnalysisTool.analyzeJavaCode(task.getCode());<br>    List&lt;String&gt; codeSmells = codeAnalysisTool.detectCodeSmells(task.getCode());<br>    <span class="hljs-type">int</span> <span class="hljs-variable">complexity</span> <span class="hljs-operator">=</span> codeAnalysisTool.calculateComplexity(task.getCode());<br>    <br>    <span class="hljs-comment">// 2. RAG检索</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">knowledge</span> <span class="hljs-operator">=</span> knowledgeBaseService.retrieveRelevantKnowledge(<br>        task.getCode(), <span class="hljs-string">&quot;quality&quot;</span><br>    );<br>    <br>    <span class="hljs-comment">// 3. LLM分析</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">prompt</span> <span class="hljs-operator">=</span> buildAnalysisPrompt(code, structure, codeSmells, complexity, knowledge);<br>    <span class="hljs-type">String</span> <span class="hljs-variable">llmAnalysis</span> <span class="hljs-operator">=</span> callLLM(prompt);<br>    <br>    <span class="hljs-comment">// 4. 评分和建议</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">score</span> <span class="hljs-operator">=</span> calculateQualityScore(structure, codeSmells, complexity);<br>    List&lt;String&gt; suggestions = extractSuggestions(llmAnalysis);<br>    <br>    <span class="hljs-keyword">return</span> AgentResult.builder()<br>        .analysis(llmAnalysis)<br>        .score(score)<br>        .findings(codeSmells)<br>        .suggestions(suggestions)<br>        .build();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="3-1-3-SecurityAgent（安全分析Agent）"><a href="#3-1-3-SecurityAgent（安全分析Agent）" class="headerlink" title="3.1.3 SecurityAgent（安全分析Agent）"></a>3.1.3 SecurityAgent（安全分析Agent）</h4><p><strong>职责：</strong></p>
+<ul>
+<li>检测安全漏洞（SQL注入、XSS、硬编码密码等）</li>
+<li>分析安全风险</li>
+<li>提供修复建议</li>
+</ul>
+<p><strong>执行流程：</strong></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">1.</span> 使用SecurityScannerTool扫描安全问题<br>   ├─ SQL注入检测（正则匹配字符串拼接）<br>   ├─ XSS检测（innerHTML、document.write）<br>   ├─ 硬编码密码检测<br>   └─ 路径遍历风险检测<br><br><span class="hljs-bullet">2.</span> 从知识库检索安全最佳实践<br>   └─ RAG向量检索<br><br><span class="hljs-bullet">3.</span> 构建Prompt，调用LLM深度分析<br>   ├─ 静态扫描结果<br>   ├─ 安全最佳实践<br>   └─ 待审查代码<br><br><span class="hljs-bullet">4.</span> 计算安全评分<br>   └─ 根据问题严重程度扣分（CRITICAL-30, HIGH-20, MEDIUM-10, LOW-5）<br><br><span class="hljs-bullet">5.</span> 提取安全建议<br>   └─ 从扫描结果和LLM分析中提取<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="3-1-4-PerformanceAgent（性能分析Agent）"><a href="#3-1-4-PerformanceAgent（性能分析Agent）" class="headerlink" title="3.1.4 PerformanceAgent（性能分析Agent）"></a>3.1.4 PerformanceAgent（性能分析Agent）</h4><p><strong>职责：</strong></p>
+<ul>
+<li>分析性能瓶颈（N+1查询、资源泄漏等）</li>
+<li>检测性能问题</li>
+<li>提供优化建议</li>
+</ul>
+<p><strong>执行流程：</strong></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">1.</span> 使用PerformanceAnalyzerTool分析性能问题<br>   ├─ N+1查询检测<br>   ├─ 字符串拼接性能问题<br>   ├─ 资源泄漏检测<br>   └─ 集合操作效率问题<br><br><span class="hljs-bullet">2.</span> 从知识库检索性能优化知识<br>   └─ RAG向量检索<br><br><span class="hljs-bullet">3.</span> 构建Prompt，调用LLM深度分析<br>   ├─ 检测到的性能问题<br>   ├─ 性能优化最佳实践<br>   └─ 待分析代码<br><br><span class="hljs-bullet">4.</span> 计算性能评分<br>   └─ 根据问题数量和严重程度评分<br><br><span class="hljs-bullet">5.</span> 提取优化建议<br>   └─ 从分析结果中提取<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="3-1-5-OrchestratorAgent（编排器Agent）"><a href="#3-1-5-OrchestratorAgent（编排器Agent）" class="headerlink" title="3.1.5 OrchestratorAgent（编排器Agent）"></a>3.1.5 OrchestratorAgent（编排器Agent）</h4><p><strong>职责：</strong></p>
+<ul>
+<li>协调多个Agent并行执行</li>
+<li>聚合Agent结果</li>
+<li>生成总结报告</li>
+</ul>
+<p><strong>执行流程：</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-number">1</span>. 根据reviewType选择要执行的Agent<br>   ├─ <span class="hljs-string">&quot;all&quot;</span> → 执行所有Agent<br>   ├─ <span class="hljs-string">&quot;quality&quot;</span> → 只执行CodeAnalysisAgent<br>   ├─ <span class="hljs-string">&quot;security&quot;</span> → 只执行SecurityAgent<br>   └─ <span class="hljs-string">&quot;performance&quot;</span> → 只执行PerformanceAgent<br><br><span class="hljs-number">2</span>. 并行执行选中的Agent<br>   └─ 使用CompletableFuture实现并行<br><br><span class="hljs-number">3</span>. 等待所有Agent完成<br>   └─ CompletableFuture<span class="hljs-selector-class">.allOf</span>()<span class="hljs-selector-class">.join</span>()<br><br><span class="hljs-number">4</span>. 聚合Agent结果<br>   ├─ 合并所有findings<br>   ├─ 合并所有suggestions<br>   └─ 计算平均评分<br><br><span class="hljs-number">5</span>. 生成总结报告<br>   └─ 调用LLM生成简洁总结（<span class="hljs-number">200</span>字以内）<br></code></pre></td></tr></table></figure>
+
+<p><strong>关键代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Map&lt;String, AgentResult&gt; <span class="hljs-title function_">orchestrateReview</span><span class="hljs-params">(AgentTask task, String reviewType)</span> &#123;<br>    Map&lt;String, AgentResult&gt; results = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>    List&lt;CompletableFuture&lt;Void&gt;&gt; futures = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>    <br>    <span class="hljs-comment">// 并行执行Agent</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;all&quot;</span>.equals(reviewType) || <span class="hljs-string">&quot;quality&quot;</span>.equals(reviewType)) &#123;<br>        CompletableFuture&lt;Void&gt; future = CompletableFuture.runAsync(() -&gt; &#123;<br>            <span class="hljs-type">AgentResult</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> codeAnalysisAgent.execute(task);<br>            <span class="hljs-keyword">synchronized</span> (results) &#123;<br>                results.put(<span class="hljs-string">&quot;quality&quot;</span>, result);<br>            &#125;<br>        &#125;, executorService);<br>        futures.add(future);<br>    &#125;<br>    <br>    <span class="hljs-comment">// ... 其他Agent</span><br>    <br>    <span class="hljs-comment">// 等待所有Agent完成</span><br>    CompletableFuture.allOf(futures.toArray(<span class="hljs-keyword">new</span> <span class="hljs-title class_">CompletableFuture</span>[<span class="hljs-number">0</span>])).join();<br>    <br>    <span class="hljs-keyword">return</span> results;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>设计思路：</strong></p>
+<ul>
+<li>使用CompletableFuture实现并行，提高效率</li>
+<li>使用synchronized保证线程安全</li>
+<li>支持动态选择要执行的Agent</li>
+</ul>
+<hr>
+<h3 id="3-2-Tool层"><a href="#3-2-Tool层" class="headerlink" title="3.2 Tool层"></a>3.2 Tool层</h3><h4 id="3-2-1-CodeAnalysisTool（代码分析工具）"><a href="#3-2-1-CodeAnalysisTool（代码分析工具）" class="headerlink" title="3.2.1 CodeAnalysisTool（代码分析工具）"></a>3.2.1 CodeAnalysisTool（代码分析工具）</h4><p><strong>功能：</strong></p>
+<ul>
+<li>分析Java代码结构</li>
+<li>检测代码坏味道</li>
+<li>计算圈复杂度</li>
+</ul>
+<p><strong>实现方式：</strong></p>
+<ul>
+<li>使用正则表达式和字符串解析</li>
+<li>统计关键字（if、for、while等）</li>
+<li>检测代码模式（长方法、魔法数字等）</li>
+</ul>
+<p><strong>关键代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> CodeStructure <span class="hljs-title function_">analyzeJavaCode</span><span class="hljs-params">(String code)</span> &#123;<br>    <span class="hljs-type">CodeStructure</span> <span class="hljs-variable">structure</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CodeStructure</span>();<br>    <br>    <span class="hljs-comment">// 统计类数量</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">classCount</span> <span class="hljs-operator">=</span> (<span class="hljs-type">int</span>) Pattern.compile(<span class="hljs-string">&quot;\\bclass\\s+\\w+&quot;</span>)<br>        .matcher(code).results().count();<br>    <br>    <span class="hljs-comment">// 统计方法数量</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">methodCount</span> <span class="hljs-operator">=</span> (<span class="hljs-type">int</span>) Pattern.compile(<span class="hljs-string">&quot;\\b(public|private|protected)\\s+\\w+\\s+\\w+\\s*\\(&quot;</span>)<br>        .matcher(code).results().count();<br>    <br>    <span class="hljs-comment">// 统计代码行数</span><br>    structure.setLinesOfCode(code.split(<span class="hljs-string">&quot;\n&quot;</span>).length);<br>    structure.setClassCount(classCount);<br>    structure.setMethodCount(methodCount);<br>    <br>    <span class="hljs-keyword">return</span> structure;<br>&#125;<br><br><span class="hljs-keyword">public</span> List&lt;String&gt; <span class="hljs-title function_">detectCodeSmells</span><span class="hljs-params">(String code)</span> &#123;<br>    List&lt;String&gt; smells = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>    <br>    <span class="hljs-comment">// 检测长方法（超过50行）</span><br>    <span class="hljs-keyword">if</span> (code.split(<span class="hljs-string">&quot;\n&quot;</span>).length &gt; <span class="hljs-number">50</span>) &#123;<br>        smells.add(<span class="hljs-string">&quot;长方法: 代码超过50行，建议拆分&quot;</span>);<br>    &#125;<br>    <br>    <span class="hljs-comment">// 检测魔法数字</span><br>    <span class="hljs-keyword">if</span> (code.matches(<span class="hljs-string">&quot;.*\\d&#123;2,&#125;.*&quot;</span>) &amp;&amp; !code.contains(<span class="hljs-string">&quot;final&quot;</span>)) &#123;<br>        smells.add(<span class="hljs-string">&quot;魔法数字: 发现硬编码数字，建议使用常量&quot;</span>);<br>    &#125;<br>    <br>    <span class="hljs-comment">// 检测深层嵌套</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">maxNesting</span> <span class="hljs-operator">=</span> calculateNestingLevel(code);<br>    <span class="hljs-keyword">if</span> (maxNesting &gt; <span class="hljs-number">4</span>) &#123;<br>        smells.add(<span class="hljs-string">&quot;深层嵌套: 最大嵌套层级为&quot;</span> + maxNesting + <span class="hljs-string">&quot;，建议不超过4层&quot;</span>);<br>    &#125;<br>    <br>    <span class="hljs-keyword">return</span> smells;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">calculateComplexity</span><span class="hljs-params">(String code)</span> &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">complexity</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; <span class="hljs-comment">// 基础复杂度为1</span><br>    <br>    <span class="hljs-comment">// 统计决策点</span><br>    String[] keywords = &#123;<span class="hljs-string">&quot;if&quot;</span>, <span class="hljs-string">&quot;else&quot;</span>, <span class="hljs-string">&quot;for&quot;</span>, <span class="hljs-string">&quot;while&quot;</span>, <span class="hljs-string">&quot;case&quot;</span>, <span class="hljs-string">&quot;catch&quot;</span>, <span class="hljs-string">&quot;&amp;&amp;&quot;</span>, <span class="hljs-string">&quot;||&quot;</span>, <span class="hljs-string">&quot;?&quot;</span>&#125;;<br>    <span class="hljs-keyword">for</span> (String keyword : keywords) &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> code.split(<span class="hljs-string">&quot;\\b&quot;</span> + keyword + <span class="hljs-string">&quot;\\b&quot;</span>).length - <span class="hljs-number">1</span>;<br>        complexity += count;<br>    &#125;<br>    <br>    <span class="hljs-keyword">return</span> complexity;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="3-2-2-SecurityScannerTool（安全扫描工具）"><a href="#3-2-2-SecurityScannerTool（安全扫描工具）" class="headerlink" title="3.2.2 SecurityScannerTool（安全扫描工具）"></a>3.2.2 SecurityScannerTool（安全扫描工具）</h4><p><strong>功能：</strong></p>
+<ul>
+<li>检测SQL注入风险</li>
+<li>检测XSS风险</li>
+<li>检测硬编码密码</li>
+<li>检测路径遍历风险</li>
+</ul>
+<p><strong>实现方式：</strong></p>
+<ul>
+<li>使用正则表达式匹配危险模式</li>
+<li>基于规则引擎检测</li>
+</ul>
+<p><strong>关键代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> SecurityScanResult <span class="hljs-title function_">scan</span><span class="hljs-params">(String code, String language)</span> &#123;<br>    List&lt;SecurityIssue&gt; issues = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>    <br>    <span class="hljs-comment">// SQL注入检测</span><br>    <span class="hljs-type">Pattern</span> <span class="hljs-variable">SQL_INJECTION_PATTERN</span> <span class="hljs-operator">=</span> Pattern.compile(<br>        <span class="hljs-string">&quot;.*(SELECT|INSERT|UPDATE|DELETE).*\\+.*&quot;</span>, Pattern.CASE_INSENSITIVE<br>    );<br>    <span class="hljs-keyword">if</span> (SQL_INJECTION_PATTERN.matcher(code).find()) &#123;<br>        issues.add(SecurityIssue.builder()<br>            .type(<span class="hljs-string">&quot;SQL_INJECTION&quot;</span>)<br>            .severity(<span class="hljs-string">&quot;HIGH&quot;</span>)<br>            .title(<span class="hljs-string">&quot;可能存在 SQL 注入风险&quot;</span>)<br>            .description(<span class="hljs-string">&quot;检测到字符串拼接方式构建 SQL 语句，建议使用参数化查询&quot;</span>)<br>            .suggestion(<span class="hljs-string">&quot;使用 PreparedStatement 或 ORM 框架的参数绑定功能&quot;</span>)<br>            .build());<br>    &#125;<br>    <br>    <span class="hljs-comment">// XSS检测（JavaScript）</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;javascript&quot;</span>.equalsIgnoreCase(language)) &#123;<br>        <span class="hljs-type">Pattern</span> <span class="hljs-variable">XSS_PATTERN</span> <span class="hljs-operator">=</span> Pattern.compile(<br>            <span class="hljs-string">&quot;.*innerHTML.*|.*document\\.write.*&quot;</span>, Pattern.CASE_INSENSITIVE<br>        );<br>        <span class="hljs-keyword">if</span> (XSS_PATTERN.matcher(code).find()) &#123;<br>            issues.add(SecurityIssue.builder()<br>                .type(<span class="hljs-string">&quot;XSS&quot;</span>)<br>                .severity(<span class="hljs-string">&quot;MEDIUM&quot;</span>)<br>                .title(<span class="hljs-string">&quot;可能存在 XSS 跨站脚本风险&quot;</span>)<br>                .suggestion(<span class="hljs-string">&quot;使用 textContent 或对用户输入进行转义&quot;</span>)<br>                .build());<br>        &#125;<br>    &#125;<br>    <br>    <span class="hljs-comment">// 硬编码密码检测</span><br>    <span class="hljs-type">Pattern</span> <span class="hljs-variable">HARDCODED_PASSWORD_PATTERN</span> <span class="hljs-operator">=</span> Pattern.compile(<br>        <span class="hljs-string">&quot;password\\s*=\\s*[\&quot;&#x27;][^\&quot;&#x27;]+[\&quot;&#x27;]&quot;</span>, Pattern.CASE_INSENSITIVE<br>    );<br>    <span class="hljs-keyword">if</span> (HARDCODED_PASSWORD_PATTERN.matcher(code).find()) &#123;<br>        issues.add(SecurityIssue.builder()<br>            .type(<span class="hljs-string">&quot;HARDCODED_PASSWORD&quot;</span>)<br>            .severity(<span class="hljs-string">&quot;CRITICAL&quot;</span>)<br>            .title(<span class="hljs-string">&quot;硬编码密码&quot;</span>)<br>            .suggestion(<span class="hljs-string">&quot;使用配置文件或环境变量存储敏感信息&quot;</span>)<br>            .build());<br>    &#125;<br>    <br>    <span class="hljs-keyword">return</span> SecurityScanResult.builder()<br>        .issueCount(issues.size())<br>        .issues(issues)<br>        .passed(issues.isEmpty())<br>        .build();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="3-2-3-PerformanceAnalyzerTool（性能分析工具）"><a href="#3-2-3-PerformanceAnalyzerTool（性能分析工具）" class="headerlink" title="3.2.3 PerformanceAnalyzerTool（性能分析工具）"></a>3.2.3 PerformanceAnalyzerTool（性能分析工具）</h4><p><strong>功能：</strong></p>
+<ul>
+<li>检测N+1查询问题</li>
+<li>检测字符串拼接性能问题</li>
+<li>检测资源泄漏</li>
+<li>检测集合操作效率问题</li>
+</ul>
+<p><strong>实现方式：</strong></p>
+<ul>
+<li>模式匹配检测性能问题</li>
+<li>静态分析代码结构</li>
+</ul>
+<hr>
+<h3 id="3-3-RAG层"><a href="#3-3-RAG层" class="headerlink" title="3.3 RAG层"></a>3.3 RAG层</h3><h4 id="3-3-1-KnowledgeBaseService（知识库服务）"><a href="#3-3-1-KnowledgeBaseService（知识库服务）" class="headerlink" title="3.3.1 KnowledgeBaseService（知识库服务）"></a>3.3.1 KnowledgeBaseService（知识库服务）</h4><p><strong>职责：</strong></p>
+<ul>
+<li>初始化知识库</li>
+<li>向量检索相关知识</li>
+<li>管理知识库内容</li>
+</ul>
+<p><strong>实现流程：</strong></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">1.</span> 初始化知识库（@PostConstruct）<br>   ├─ 创建DocumentSplitter（分块大小500，重叠100）<br>   └─ 添加知识条目到向量库<br><br><span class="hljs-bullet">2.</span> 检索相关知识<br>   ├─ 构建查询（根据reviewType和代码内容）<br>   ├─ 向量化查询<br>   ├─ 向量检索（top-3）<br>   └─ 返回相关知识文本<br><br><span class="hljs-bullet">3.</span> 知识库内容<br>   ├─ Java最佳实践<br>   ├─ 安全最佳实践<br>   └─ 性能优化知识<br></code></pre></td></tr></table></figure>
+
+<p><strong>关键代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@PostConstruct</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">init</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">// 初始化文档分割器</span><br>    <span class="hljs-built_in">this</span>.documentSplitter = DocumentSplitters.recursive(<span class="hljs-number">500</span>, <span class="hljs-number">100</span>);<br>    <br>    <span class="hljs-comment">// 初始化知识库</span><br>    initializeKnowledgeBase();<br>&#125;<br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">initializeKnowledgeBase</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">// 添加Java最佳实践</span><br>    addKnowledge(<span class="hljs-string">&quot;Java 异常处理最佳实践&quot;</span>, <br>        <span class="hljs-string">&quot;1. 不要捕获 Exception 基类\n&quot;</span> +<br>        <span class="hljs-string">&quot;2. 使用 try-with-resources 自动关闭资源\n&quot;</span> +<br>        <span class="hljs-string">&quot;3. 自定义异常应该继承自适当的异常基类&quot;</span>);<br>    <br>    <span class="hljs-comment">// 添加安全最佳实践</span><br>    addKnowledge(<span class="hljs-string">&quot;SQL 注入防护&quot;</span>,<br>        <span class="hljs-string">&quot;1. 永远不要使用字符串拼接构建 SQL 语句\n&quot;</span> +<br>        <span class="hljs-string">&quot;2. 使用 PreparedStatement 进行参数化查询\n&quot;</span> +<br>        <span class="hljs-string">&quot;3. 使用 ORM 框架的参数绑定功能&quot;</span>);<br>    <br>    <span class="hljs-comment">// ... 更多知识</span><br>&#125;<br><br><span class="hljs-keyword">public</span> String <span class="hljs-title function_">retrieveRelevantKnowledge</span><span class="hljs-params">(String code, String reviewType)</span> &#123;<br>    <span class="hljs-comment">// 构建查询</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">query</span> <span class="hljs-operator">=</span> buildQuery(code, reviewType);<br>    <br>    <span class="hljs-comment">// 向量化查询</span><br>    <span class="hljs-type">Embedding</span> <span class="hljs-variable">queryEmbedding</span> <span class="hljs-operator">=</span> embeddingModel.embed(query).content();<br>    <br>    <span class="hljs-comment">// 向量检索</span><br>    List&lt;EmbeddingMatch&lt;TextSegment&gt;&gt; matches = embeddingStore.findRelevant(<br>        queryEmbedding, <span class="hljs-number">3</span><br>    );<br>    <br>    <span class="hljs-comment">// 合并检索结果</span><br>    <span class="hljs-keyword">return</span> matches.stream()<br>        .map(match -&gt; match.embedded().text())<br>        .collect(Collectors.joining(<span class="hljs-string">&quot;\n\n&quot;</span>));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>设计思路：</strong></p>
+<ul>
+<li>使用向量检索实现语义搜索</li>
+<li>分块存储知识，提高检索精度</li>
+<li>支持动态添加知识</li>
+</ul>
+<hr>
+<h3 id="3-4-Service层"><a href="#3-4-Service层" class="headerlink" title="3.4 Service层"></a>3.4 Service层</h3><h4 id="3-4-1-CodeReviewService（代码审查服务）"><a href="#3-4-1-CodeReviewService（代码审查服务）" class="headerlink" title="3.4.1 CodeReviewService（代码审查服务）"></a>3.4.1 CodeReviewService（代码审查服务）</h4><p><strong>职责：</strong></p>
+<ul>
+<li>接收审查请求</li>
+<li>编排Agent执行</li>
+<li>生成审查报告</li>
+<li>保存审查记录</li>
+</ul>
+<p><strong>执行流程：</strong></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">1.</span> 创建审查记录<br>   └─ 保存到数据库<br><br><span class="hljs-bullet">2.</span> 构建Agent任务<br>   └─ AgentTask对象<br><br><span class="hljs-bullet">3.</span> 编排多个Agent执行审查<br>   └─ 调用OrchestratorAgent.orchestrateReview()<br><br><span class="hljs-bullet">4.</span> 整合结果<br>   └─ 调用OrchestratorAgent.synthesizeResults()<br><br><span class="hljs-bullet">5.</span> 构建审查报告<br>   ├─ 质量分析结果<br>   ├─ 安全分析结果<br>   ├─ 性能分析结果<br>   └─ 总体评分和建议<br><br><span class="hljs-bullet">6.</span> 更新审查记录<br>   └─ 保存报告到数据库<br></code></pre></td></tr></table></figure>
+
+<p><strong>关键代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> ReviewReport <span class="hljs-title function_">reviewCode</span><span class="hljs-params">(CodeReviewRequest request)</span> &#123;<br>    <span class="hljs-type">long</span> <span class="hljs-variable">startTime</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>    <br>    <span class="hljs-comment">// 1. 创建审查记录</span><br>    <span class="hljs-type">ReviewRecord</span> <span class="hljs-variable">record</span> <span class="hljs-operator">=</span> createReviewRecord(request);<br>    <br>    <span class="hljs-comment">// 2. 构建Agent任务</span><br>    <span class="hljs-type">AgentTask</span> <span class="hljs-variable">task</span> <span class="hljs-operator">=</span> AgentTask.builder()<br>        .type(<span class="hljs-string">&quot;code_review&quot;</span>)<br>        .code(request.getCode())<br>        .language(request.getLanguage())<br>        .fileName(request.getFileName())<br>        .build();<br>    <br>    <span class="hljs-comment">// 3. 编排多个Agent执行审查</span><br>    Map&lt;String, AgentResult&gt; agentResults = orchestratorAgent.orchestrateReview(<br>        task, request.getReviewType()<br>    );<br>    <br>    <span class="hljs-comment">// 4. 整合结果</span><br>    <span class="hljs-type">AgentResult</span> <span class="hljs-variable">synthesizedResult</span> <span class="hljs-operator">=</span> orchestratorAgent.synthesizeResults(agentResults);<br>    <br>    <span class="hljs-comment">// 5. 构建审查报告</span><br>    <span class="hljs-type">ReviewReport</span> <span class="hljs-variable">report</span> <span class="hljs-operator">=</span> buildReviewReport(record.getId(), agentResults, synthesizedResult);<br>    <br>    <span class="hljs-comment">// 6. 更新审查记录</span><br>    <span class="hljs-type">long</span> <span class="hljs-variable">duration</span> <span class="hljs-operator">=</span> System.currentTimeMillis() - startTime;<br>    updateReviewRecord(record.getId(), report, duration);<br>    <br>    <span class="hljs-keyword">return</span> report;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-5-Config层"><a href="#3-5-Config层" class="headerlink" title="3.5 Config层"></a>3.5 Config层</h3><h4 id="3-5-1-LLMConfig（LLM配置）"><a href="#3-5-1-LLMConfig（LLM配置）" class="headerlink" title="3.5.1 LLMConfig（LLM配置）"></a>3.5.1 LLMConfig（LLM配置）</h4><p><strong>职责：</strong></p>
+<ul>
+<li>配置LLM提供商</li>
+<li>创建ChatLanguageModel Bean</li>
+</ul>
+<p><strong>支持的LLM：</strong></p>
+<ul>
+<li>OpenAI</li>
+<li>阿里云通义千问</li>
+<li>Kimi</li>
+</ul>
+<p><strong>关键代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span><br><span class="hljs-keyword">public</span> ChatLanguageModel <span class="hljs-title function_">chatLanguageModel</span><span class="hljs-params">(LLMProperties properties)</span> &#123;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">provider</span> <span class="hljs-operator">=</span> properties.getProvider();<br>    <br>    <span class="hljs-keyword">switch</span> (provider.toLowerCase()) &#123;<br>        <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;qwen&quot;</span>:<br>            <span class="hljs-comment">// 阿里云通义千问</span><br>            LLMProperties.<span class="hljs-type">QwenConfig</span> <span class="hljs-variable">qwenConfig</span> <span class="hljs-operator">=</span> properties.getQwen();<br>            <span class="hljs-keyword">return</span> OpenAiChatModel.builder()<br>                .apiKey(qwenConfig.getApiKey())<br>                .baseUrl(qwenConfig.getBaseUrl())<br>                .modelName(qwenConfig.getModel())<br>                .temperature(qwenConfig.getTemperature())<br>                .maxTokens(qwenConfig.getMaxTokens())<br>                .timeout(Duration.ofSeconds(<span class="hljs-number">120</span>))<br>                .build();<br>        <br>        <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;openai&quot;</span>:<br>        <span class="hljs-keyword">default</span>:<br>            <span class="hljs-comment">// OpenAI</span><br>            <span class="hljs-comment">// ...</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="3-5-2-VectorStoreConfig（向量存储配置）"><a href="#3-5-2-VectorStoreConfig（向量存储配置）" class="headerlink" title="3.5.2 VectorStoreConfig（向量存储配置）"></a>3.5.2 VectorStoreConfig（向量存储配置）</h4><p><strong>职责：</strong></p>
+<ul>
+<li>配置Embedding模型</li>
+<li>配置向量存储</li>
+</ul>
+<p><strong>实现方式：</strong></p>
+<ul>
+<li>使用Ollama本地Embedding模型（nomic-embed-text）</li>
+<li>使用InMemoryEmbeddingStore（可扩展为Milvus）</li>
+</ul>
+<p><strong>关键代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span><br><span class="hljs-keyword">public</span> EmbeddingModel <span class="hljs-title function_">embeddingModel</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> OllamaEmbeddingModel.builder()<br>        .baseUrl(ollamaBaseUrl)<br>        .modelName(embeddingModelName)<br>        .timeout(Duration.ofSeconds(<span class="hljs-number">60</span>))<br>        .build();<br>&#125;<br><br><span class="hljs-meta">@Bean</span><br><span class="hljs-keyword">public</span> EmbeddingStore&lt;TextSegment&gt; <span class="hljs-title function_">embeddingStore</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">InMemoryEmbeddingStore</span>&lt;&gt;();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="四、数据流程"><a href="#四、数据流程" class="headerlink" title="四、数据流程"></a>四、数据流程</h2><h3 id="4-1-完整数据流程"><a href="#4-1-完整数据流程" class="headerlink" title="4.1 完整数据流程"></a>4.1 完整数据流程</h3><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">用户请求<br>    │<br>    ▼<br>CodeReviewController<br>    │<br>    ▼<br>CodeReviewService<br>    │<br>    ├─ <span class="hljs-number">1</span>. 创建审查记录（MySQL）<br>    │<br>    ├─ <span class="hljs-number">2</span>. 构建Agent任务<br>    │<br>    ├─ <span class="hljs-number">3</span>. <span class="hljs-keyword">OrchestratorAgent编排</span><br><span class="hljs-keyword"></span>    │   │<br>    │   ├─ 并行执行<span class="hljs-number">3</span>个Agent<br>    │   │   │<br>    │   │   ├─ CodeAnalysisAgent<br>    │   │   │   ├─ CodeAnalysisTool分析代码<br>    │   │   │   ├─ RAG检索知识（向量检索）<br>    │   │   │   └─ <span class="hljs-keyword">LLM深度分析</span><br><span class="hljs-keyword"></span>    │   │   │<br>    │   │   ├─ SecurityAgent<br>    │   │   │   ├─ SecurityScannerTool扫描<br>    │   │   │   ├─ RAG检索知识<br>    │   │   │   └─ <span class="hljs-keyword">LLM深度分析</span><br><span class="hljs-keyword"></span>    │   │   │<br>    │   │   └─ PerformanceAgent<br>    │   │       ├─ PerformanceAnalyzerTool分析<br>    │   │       ├─ RAG检索知识<br>    │   │       └─ <span class="hljs-keyword">LLM深度分析</span><br><span class="hljs-keyword"></span>    │   │<br>    │   └─ 聚合结果<br>    │       └─ <span class="hljs-keyword">LLM生成总结</span><br><span class="hljs-keyword"></span>    │<br>    ├─ <span class="hljs-number">4</span>. 构建审查报告<br>    │<br>    └─ <span class="hljs-number">5</span>. 更新审查记录（MySQL）<br>        │<br>        ▼<br>返回审查报告<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-2-关键数据流"><a href="#4-2-关键数据流" class="headerlink" title="4.2 关键数据流"></a>4.2 关键数据流</h3><h4 id="4-2-1-Agent执行流程"><a href="#4-2-1-Agent执行流程" class="headerlink" title="4.2.1 Agent执行流程"></a>4.2.1 Agent执行流程</h4><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">AgentTask<br>    │<br>    ├─ Tool分析 → 结构化数据（CodeStructure、SecurityScanResult等）<br>    │<br>    ├─ RAG检索 → 相关知识文本<br>    │<br>    ├─ 构建Prompt → 包含代码、工具结果、知识<br>    │<br>    ├─ <span class="hljs-keyword">LLM分析 </span>→ 深度分析文本<br>    │<br>    └─ 评分和建议 → AgentResult<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-2-2-RAG检索流程"><a href="#4-2-2-RAG检索流程" class="headerlink" title="4.2.2 RAG检索流程"></a>4.2.2 RAG检索流程</h4><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs coq">查询文本<br>    │<br>    ├─ 构建查询（reviewType + 代码特征）<br>    │<br>    ├─ 向量化查询（EmbeddingModel）<br>    │<br>    ├─ 向量检索（EmbeddingStore.findRelevant）<br>    │<br>    └─ 返回相关知识（<span class="hljs-built_in">top</span><span class="hljs-number">-3</span>）<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="五、关键技术点"><a href="#五、关键技术点" class="headerlink" title="五、关键技术点"></a>五、关键技术点</h2><h3 id="5-1-Multi-Agent架构"><a href="#5-1-Multi-Agent架构" class="headerlink" title="5.1 Multi-Agent架构"></a>5.1 Multi-Agent架构</h3><p><strong>核心思想：</strong></p>
+<ul>
+<li>每个Agent专注于特定领域（质量、安全、性能）</li>
+<li>OrchestratorAgent协调多个Agent并行工作</li>
+<li>通过并行执行提高效率</li>
+</ul>
+<p><strong>技术实现：</strong></p>
+<ul>
+<li>使用CompletableFuture实现并行</li>
+<li>使用synchronized保证线程安全</li>
+<li>使用ExecutorService管理线程池</li>
+</ul>
+<p><strong>优势：</strong></p>
+<ul>
+<li>职责清晰，易于扩展</li>
+<li>并行执行，提高效率</li>
+<li>可独立测试和维护</li>
+</ul>
+<hr>
+<h3 id="5-2-RAG知识增强"><a href="#5-2-RAG知识增强" class="headerlink" title="5.2 RAG知识增强"></a>5.2 RAG知识增强</h3><p><strong>核心思想：</strong></p>
+<ul>
+<li>通过向量检索获取相关知识</li>
+<li>将知识作为上下文提供给LLM</li>
+<li>提高LLM分析的准确性和专业性</li>
+</ul>
+<p><strong>技术实现：</strong></p>
+<ul>
+<li>使用Ollama本地Embedding模型</li>
+<li>使用InMemoryEmbeddingStore存储向量</li>
+<li>使用DocumentSplitter分块存储知识</li>
+</ul>
+<p><strong>优势：</strong></p>
+<ul>
+<li>提供专业领域知识</li>
+<li>减少LLM幻觉</li>
+<li>提高分析质量</li>
+</ul>
+<hr>
+<h3 id="5-3-Tool调用能力"><a href="#5-3-Tool调用能力" class="headerlink" title="5.3 Tool调用能力"></a>5.3 Tool调用能力</h3><p><strong>核心思想：</strong></p>
+<ul>
+<li>Agent可以使用工具进行静态分析</li>
+<li>工具结果作为LLM分析的输入</li>
+<li>结合规则引擎和LLM的优势</li>
+</ul>
+<p><strong>技术实现：</strong></p>
+<ul>
+<li>CodeAnalysisTool：代码结构分析</li>
+<li>SecurityScannerTool：安全漏洞扫描</li>
+<li>PerformanceAnalyzerTool：性能问题检测</li>
+</ul>
+<p><strong>优势：</strong></p>
+<ul>
+<li>快速发现明显问题</li>
+<li>提供结构化数据</li>
+<li>提高分析效率</li>
+</ul>
+<hr>
+<h3 id="5-4-并行执行优化"><a href="#5-4-并行执行优化" class="headerlink" title="5.4 并行执行优化"></a>5.4 并行执行优化</h3><p><strong>核心思想：</strong></p>
+<ul>
+<li>多个Agent并行执行，减少总耗时</li>
+<li>使用CompletableFuture实现异步执行</li>
+<li>使用线程池管理并发</li>
+</ul>
+<p><strong>技术实现：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">ExecutorService</span> <span class="hljs-variable">executorService</span> <span class="hljs-operator">=</span> Executors.newFixedThreadPool(<span class="hljs-number">3</span>);<br><br>CompletableFuture&lt;Void&gt; future1 = CompletableFuture.runAsync(() -&gt; &#123;<br>    <span class="hljs-type">AgentResult</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> codeAnalysisAgent.execute(task);<br>    results.put(<span class="hljs-string">&quot;quality&quot;</span>, result);<br>&#125;, executorService);<br><br>CompletableFuture&lt;Void&gt; future2 = CompletableFuture.runAsync(() -&gt; &#123;<br>    <span class="hljs-type">AgentResult</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> securityAgent.execute(task);<br>    results.put(<span class="hljs-string">&quot;security&quot;</span>, result);<br>&#125;, executorService);<br><br>CompletableFuture.allOf(future1, future2).join();<br></code></pre></td></tr></table></figure>
+
+<p><strong>优势：</strong></p>
+<ul>
+<li>总耗时 &#x3D; max(各Agent耗时)，而不是sum</li>
+<li>提高系统吞吐量</li>
+<li>充分利用多核CPU</li>
+</ul>
+<hr>
+<h2 id="六、面试常见问题"><a href="#六、面试常见问题" class="headerlink" title="六、面试常见问题"></a>六、面试常见问题</h2><h3 id="6-1-项目概述类问题"><a href="#6-1-项目概述类问题" class="headerlink" title="6.1 项目概述类问题"></a>6.1 项目概述类问题</h3><h4 id="Q1-请介绍一下这个项目"><a href="#Q1-请介绍一下这个项目" class="headerlink" title="Q1: 请介绍一下这个项目"></a>Q1: 请介绍一下这个项目</h4><p><strong>回答要点：</strong></p>
+<ol>
+<li><strong>项目背景</strong>：传统代码审查效率低，需要自动化工具</li>
+<li><strong>解决方案</strong>：基于Multi-Agent架构的AI代码审查系统</li>
+<li><strong>核心功能</strong>：代码质量、安全、性能分析</li>
+<li><strong>技术特点</strong>：RAG知识增强、Tool调用、并行执行</li>
+</ol>
+<p><strong>标准回答：</strong></p>
+<blockquote>
+<p>这是一个基于Multi-Agent架构的AI代码审查助手项目。项目主要解决了传统代码审查效率低、成本高的问题。</p>
+<p>系统采用3个专业Agent并行工作的方式，分别负责代码质量、安全和性能分析。每个Agent结合静态分析工具和LLM深度分析，通过RAG知识增强提供专业的代码审查建议。</p>
+<p>技术上使用了Spring Boot、LangChain4j、Ollama等框架，实现了Agent编排、RAG检索、Tool调用等核心功能。</p>
+</blockquote>
+<hr>
+<h4 id="Q2-为什么选择Multi-Agent架构？"><a href="#Q2-为什么选择Multi-Agent架构？" class="headerlink" title="Q2: 为什么选择Multi-Agent架构？"></a>Q2: 为什么选择Multi-Agent架构？</h4><p><strong>回答要点：</strong></p>
+<ol>
+<li><strong>单一Agent的问题</strong>：难以同时兼顾质量、安全、性能多个维度</li>
+<li><strong>Multi-Agent的优势</strong>：职责清晰、易于扩展、并行执行</li>
+<li><strong>实际效果</strong>：提高分析质量和效率</li>
+</ol>
+<p><strong>标准回答：</strong></p>
+<blockquote>
+<p>单一Agent在处理多维度任务时存在以下问题：</p>
+<ol>
+<li>Prompt过长，LLM难以同时关注所有维度</li>
+<li>分析结果不够专业和深入</li>
+<li>难以扩展新功能</li>
+</ol>
+<p>Multi-Agent架构的优势：</p>
+<ol>
+<li><strong>职责清晰</strong>：每个Agent专注于特定领域，分析更专业</li>
+<li><strong>易于扩展</strong>：添加新Agent不影响现有功能</li>
+<li><strong>并行执行</strong>：多个Agent并行工作，提高效率</li>
+<li><strong>可维护性强</strong>：每个Agent独立测试和维护</li>
+</ol>
+<p>在实际使用中，Multi-Agent架构能够提供更全面、更专业的代码审查建议。</p>
+</blockquote>
+<hr>
+<h3 id="6-2-技术实现类问题"><a href="#6-2-技术实现类问题" class="headerlink" title="6.2 技术实现类问题"></a>6.2 技术实现类问题</h3><h4 id="Q3-如何实现Agent的并行执行？"><a href="#Q3-如何实现Agent的并行执行？" class="headerlink" title="Q3: 如何实现Agent的并行执行？"></a>Q3: 如何实现Agent的并行执行？</h4><p><strong>回答要点：</strong></p>
+<ol>
+<li><strong>技术方案</strong>：CompletableFuture + ExecutorService</li>
+<li><strong>实现细节</strong>：线程安全、异常处理</li>
+<li><strong>性能优化</strong>：线程池大小、超时控制</li>
+</ol>
+<p><strong>标准回答：</strong></p>
+<blockquote>
+<p>使用Java的CompletableFuture实现Agent的并行执行。</p>
+<p><strong>实现步骤：</strong></p>
+<ol>
+<li>创建线程池：<code>ExecutorService executorService = Executors.newFixedThreadPool(3)</code></li>
+<li>使用CompletableFuture.runAsync()异步执行每个Agent</li>
+<li>使用CompletableFuture.allOf().join()等待所有Agent完成</li>
+<li>使用synchronized保证结果收集的线程安全</li>
+</ol>
+<p><strong>关键代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;CompletableFuture&lt;Void&gt;&gt; futures = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br><br>CompletableFuture&lt;Void&gt; future = CompletableFuture.runAsync(() -&gt; &#123;<br>    <span class="hljs-type">AgentResult</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> codeAnalysisAgent.execute(task);<br>    <span class="hljs-keyword">synchronized</span> (results) &#123;<br>        results.put(<span class="hljs-string">&quot;quality&quot;</span>, result);<br>    &#125;<br>&#125;, executorService);<br>futures.add(future);<br><br>CompletableFuture.allOf(futures.toArray(<span class="hljs-keyword">new</span> <span class="hljs-title class_">CompletableFuture</span>[<span class="hljs-number">0</span>])).join();<br></code></pre></td></tr></table></figure>
+
+<p><strong>优势：</strong></p>
+<ul>
+<li>总耗时 &#x3D; max(各Agent耗时)，而不是sum</li>
+<li>充分利用多核CPU</li>
+<li>代码简洁，易于维护</li>
+</ul>
+</blockquote>
+<hr>
+<h4 id="Q4-RAG是如何实现的？"><a href="#Q4-RAG是如何实现的？" class="headerlink" title="Q4: RAG是如何实现的？"></a>Q4: RAG是如何实现的？</h4><p><strong>回答要点：</strong></p>
+<ol>
+<li><strong>技术选型</strong>：Ollama Embedding模型 + InMemoryEmbeddingStore</li>
+<li><strong>实现流程</strong>：知识分块、向量化、检索</li>
+<li><strong>优化策略</strong>：分块大小、top-k选择</li>
+</ol>
+<p><strong>标准回答：</strong></p>
+<blockquote>
+<p>RAG（Retrieval Augmented Generation）通过向量检索获取相关知识，增强LLM的分析能力。</p>
+<p><strong>实现流程：</strong></p>
+<ol>
+<li><strong>知识初始化</strong>：将知识库内容分块（500 token，重叠100 token），向量化后存储</li>
+<li><strong>查询构建</strong>：根据reviewType和代码内容构建查询文本</li>
+<li><strong>向量检索</strong>：将查询向量化，在向量库中检索相似度最高的top-3知识</li>
+<li><strong>知识融合</strong>：将检索到的知识作为上下文提供给LLM</li>
+</ol>
+<p><strong>技术选型：</strong></p>
+<ul>
+<li><strong>Embedding模型</strong>：Ollama nomic-embed-text（本地运行，免费）</li>
+<li><strong>向量存储</strong>：InMemoryEmbeddingStore（可扩展为Milvus）</li>
+<li><strong>分块策略</strong>：递归分块，保证语义完整性</li>
+</ul>
+<p><strong>优势：</strong></p>
+<ul>
+<li>提供专业领域知识</li>
+<li>减少LLM幻觉</li>
+<li>提高分析准确性</li>
+</ul>
+</blockquote>
+<hr>
+<h4 id="Q5-Tool调用是如何实现的？"><a href="#Q5-Tool调用是如何实现的？" class="headerlink" title="Q5: Tool调用是如何实现的？"></a>Q5: Tool调用是如何实现的？</h4><p><strong>回答要点：</strong></p>
+<ol>
+<li><strong>Tool设计</strong>：静态分析工具（CodeAnalysisTool、SecurityScannerTool等）</li>
+<li><strong>调用流程</strong>：Agent调用Tool → 获取结构化数据 → 构建Prompt → LLM分析</li>
+<li><strong>优势</strong>：结合规则引擎和LLM的优势</li>
+</ol>
+<p><strong>标准回答：</strong></p>
+<blockquote>
+<p>Tool调用是Agent使用外部工具进行静态分析的能力。</p>
+<p><strong>实现方式：</strong></p>
+<ol>
+<li><p><strong>Tool设计</strong>：每个Tool专注于特定分析任务</p>
+<ul>
+<li>CodeAnalysisTool：代码结构分析、坏味道检测、复杂度计算</li>
+<li>SecurityScannerTool：SQL注入、XSS、硬编码密码检测</li>
+<li>PerformanceAnalyzerTool：N+1查询、资源泄漏检测</li>
+</ul>
+</li>
+<li><p><strong>调用流程</strong>：</p>
+<ul>
+<li>Agent调用Tool获取结构化数据</li>
+<li>将Tool结果作为上下文构建Prompt</li>
+<li>LLM基于Tool结果进行深度分析</li>
+</ul>
+</li>
+</ol>
+<p><strong>优势：</strong></p>
+<ul>
+<li><strong>快速发现明显问题</strong>：规则引擎快速检测常见问题</li>
+<li><strong>提供结构化数据</strong>：Tool返回结构化数据，易于处理</li>
+<li><strong>结合LLM优势</strong>：LLM进行深度分析和建议</li>
+<li><strong>提高效率</strong>：减少LLM的token消耗</li>
+</ul>
+</blockquote>
+<hr>
+<h3 id="6-3-设计思路类问题"><a href="#6-3-设计思路类问题" class="headerlink" title="6.3 设计思路类问题"></a>6.3 设计思路类问题</h3><h4 id="Q6-如何设计BaseAgent基类？"><a href="#Q6-如何设计BaseAgent基类？" class="headerlink" title="Q6: 如何设计BaseAgent基类？"></a>Q6: 如何设计BaseAgent基类？</h4><p><strong>回答要点：</strong></p>
+<ol>
+<li><strong>设计模式</strong>：模板方法模式</li>
+<li><strong>职责划分</strong>：基类提供通用能力，子类实现具体逻辑</li>
+<li><strong>扩展性</strong>：易于添加新Agent</li>
+</ol>
+<p><strong>标准回答：</strong></p>
+<blockquote>
+<p>BaseAgent采用模板方法模式设计，定义了Agent的执行模板。</p>
+<p><strong>设计思路：</strong></p>
+<ol>
+<li><strong>抽象方法</strong>：getAgentName()、execute()由子类实现</li>
+<li><strong>模板方法</strong>：callLLM()由基类实现，子类直接使用</li>
+<li><strong>依赖注入</strong>：ChatLanguageModel通过@Autowired注入</li>
+</ol>
+<p><strong>优势：</strong></p>
+<ul>
+<li><strong>代码复用</strong>：所有Agent复用LLM调用逻辑</li>
+<li><strong>易于扩展</strong>：添加新Agent只需继承BaseAgent</li>
+<li><strong>统一接口</strong>：所有Agent具有统一的接口</li>
+<li><strong>易于测试</strong>：可以mock ChatLanguageModel进行测试</li>
+</ul>
+</blockquote>
+<hr>
+<h4 id="Q7-如何处理LLM的响应时间较长的问题？"><a href="#Q7-如何处理LLM的响应时间较长的问题？" class="headerlink" title="Q7: 如何处理LLM的响应时间较长的问题？"></a>Q7: 如何处理LLM的响应时间较长的问题？</h4><p><strong>回答要点：</strong></p>
+<ol>
+<li><strong>问题分析</strong>：LLM API调用耗时（15-30秒&#x2F;次）</li>
+<li><strong>优化策略</strong>：并行执行、缓存、超时控制</li>
+<li><strong>用户体验</strong>：异步处理、进度反馈</li>
+</ol>
+<p><strong>标准回答：</strong></p>
+<blockquote>
+<p>LLM API调用确实耗时较长，我采用了以下优化策略：</p>
+<p><strong>1. 并行执行</strong></p>
+<ul>
+<li>多个Agent并行调用LLM，总耗时 &#x3D; max(各Agent耗时)</li>
+<li>而不是串行执行，总耗时 &#x3D; sum(各Agent耗时)</li>
+</ul>
+<p><strong>2. 超时控制</strong></p>
+<ul>
+<li>设置120秒超时，避免长时间等待</li>
+<li>超时后返回部分结果，不影响其他Agent</li>
+</ul>
+<p><strong>3. 缓存机制（可扩展）</strong></p>
+<ul>
+<li>对相同代码的审查结果进行缓存</li>
+<li>减少重复的LLM调用</li>
+</ul>
+<p><strong>4. 异步处理（可扩展）</strong></p>
+<ul>
+<li>对于大型代码库，可以采用异步处理</li>
+<li>返回任务ID，用户通过轮询获取结果</li>
+</ul>
+<p><strong>实际效果：</strong></p>
+<ul>
+<li>3个Agent并行执行，总耗时约30-60秒</li>
+<li>如果串行执行，总耗时约90-180秒</li>
+<li>性能提升约3倍</li>
+</ul>
+</blockquote>
+<hr>
+<h3 id="6-4-扩展性类问题"><a href="#6-4-扩展性类问题" class="headerlink" title="6.4 扩展性类问题"></a>6.4 扩展性类问题</h3><h4 id="Q8-如何添加新的Agent？"><a href="#Q8-如何添加新的Agent？" class="headerlink" title="Q8: 如何添加新的Agent？"></a>Q8: 如何添加新的Agent？</h4><p><strong>回答要点：</strong></p>
+<ol>
+<li><strong>实现步骤</strong>：继承BaseAgent、实现execute()方法</li>
+<li><strong>注册方式</strong>：使用@Component注解</li>
+<li><strong>编排集成</strong>：在OrchestratorAgent中添加</li>
+</ol>
+<p><strong>标准回答：</strong></p>
+<blockquote>
+<p>添加新Agent非常简单，只需3步：</p>
+<p><strong>1. 创建Agent类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">NewAgent</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BaseAgent</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getAgentName</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;NewAgent&quot;</span>;<br>    &#125;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> AgentResult <span class="hljs-title function_">execute</span><span class="hljs-params">(AgentTask task)</span> &#123;<br>        <span class="hljs-comment">// 实现具体逻辑</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>2. 在OrchestratorAgent中注册</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> NewAgent newAgent;<br><br><span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;new&quot;</span>.equals(reviewType)) &#123;<br>    CompletableFuture.runAsync(() -&gt; &#123;<br>        results.put(<span class="hljs-string">&quot;new&quot;</span>, newAgent.execute(task));<br>    &#125;, executorService);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>3. 在Service层处理结果</strong></p>
+<ul>
+<li>在buildReviewReport()方法中添加新Agent的结果处理</li>
+</ul>
+<p><strong>优势：</strong></p>
+<ul>
+<li>无需修改现有代码</li>
+<li>新Agent独立测试和维护</li>
+<li>符合开闭原则</li>
+</ul>
+</blockquote>
+<hr>
+<h4 id="Q9-如何扩展RAG知识库？"><a href="#Q9-如何扩展RAG知识库？" class="headerlink" title="Q9: 如何扩展RAG知识库？"></a>Q9: 如何扩展RAG知识库？</h4><p><strong>回答要点：</strong></p>
+<ol>
+<li><strong>添加知识</strong>：在KnowledgeBaseService中添加</li>
+<li><strong>动态加载</strong>：从数据库加载知识（可扩展）</li>
+<li><strong>知识管理</strong>：支持知识的增删改查</li>
+</ol>
+<p><strong>标准回答：</strong></p>
+<blockquote>
+<p>RAG知识库的扩展非常灵活：</p>
+<p><strong>1. 静态添加</strong></p>
+<ul>
+<li>在KnowledgeBaseService.initializeKnowledgeBase()方法中添加新知识</li>
+<li>系统启动时自动加载到向量库</li>
+</ul>
+<p><strong>2. 动态加载（可扩展）</strong></p>
+<ul>
+<li>从数据库加载知识（KnowledgeItem表）</li>
+<li>支持通过API动态添加知识</li>
+<li>支持知识的增删改查</li>
+</ul>
+<p><strong>3. 知识来源</strong></p>
+<ul>
+<li>最佳实践文档</li>
+<li>代码规范文档</li>
+<li>安全指南</li>
+<li>性能优化案例</li>
+</ul>
+<p><strong>优势：</strong></p>
+<ul>
+<li>知识库可以持续更新</li>
+<li>支持多语言知识</li>
+<li>支持领域特定知识</li>
+</ul>
+</blockquote>
+<hr>
+<h3 id="6-5-性能优化类问题"><a href="#6-5-性能优化类问题" class="headerlink" title="6.5 性能优化类问题"></a>6.5 性能优化类问题</h3><h4 id="Q10-项目有哪些性能优化点？"><a href="#Q10-项目有哪些性能优化点？" class="headerlink" title="Q10: 项目有哪些性能优化点？"></a>Q10: 项目有哪些性能优化点？</h4><p><strong>回答要点：</strong></p>
+<ol>
+<li><strong>并行执行</strong>：Agent并行工作</li>
+<li><strong>缓存机制</strong>：Redis缓存（可扩展）</li>
+<li><strong>数据库优化</strong>：索引、连接池</li>
+<li><strong>LLM优化</strong>：减少token、超时控制</li>
+</ol>
+<p><strong>标准回答：</strong></p>
+<blockquote>
+<p>项目在多个层面进行了性能优化：</p>
+<p><strong>1. 并行执行</strong></p>
+<ul>
+<li>3个Agent并行执行，总耗时减少约3倍</li>
+<li>使用线程池管理并发，避免资源浪费</li>
+</ul>
+<p><strong>2. 缓存机制（可扩展）</strong></p>
+<ul>
+<li>Redis缓存审查结果</li>
+<li>对相同代码的审查结果进行缓存</li>
+<li>减少重复的LLM调用和数据库查询</li>
+</ul>
+<p><strong>3. 数据库优化</strong></p>
+<ul>
+<li>使用连接池（HikariCP）</li>
+<li>添加索引（record_id、status等）</li>
+<li>批量插入和更新</li>
+</ul>
+<p><strong>4. LLM优化</strong></p>
+<ul>
+<li>减少Prompt长度（只包含必要信息）</li>
+<li>设置合理的max-tokens</li>
+<li>超时控制，避免长时间等待</li>
+</ul>
+<p><strong>5. 向量检索优化</strong></p>
+<ul>
+<li>使用本地Embedding模型（Ollama）</li>
+<li>减少检索的top-k（3个结果足够）</li>
+<li>分块策略优化（平衡精度和效率）</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="七、项目亮点总结"><a href="#七、项目亮点总结" class="headerlink" title="七、项目亮点总结"></a>七、项目亮点总结</h2><h3 id="7-1-技术亮点"><a href="#7-1-技术亮点" class="headerlink" title="7.1 技术亮点"></a>7.1 技术亮点</h3><ol>
+<li><strong>Multi-Agent架构</strong>：职责清晰、易于扩展、并行执行</li>
+<li><strong>RAG知识增强</strong>：提供专业领域知识，提高分析准确性</li>
+<li><strong>Tool调用能力</strong>：结合规则引擎和LLM的优势</li>
+<li><strong>并行执行优化</strong>：总耗时减少约3倍</li>
+<li><strong>可扩展设计</strong>：易于添加新Agent和Tool</li>
+</ol>
+<h3 id="7-2-工程亮点"><a href="#7-2-工程亮点" class="headerlink" title="7.2 工程亮点"></a>7.2 工程亮点</h3><ol>
+<li><strong>代码结构清晰</strong>：分层架构，职责明确</li>
+<li><strong>设计模式应用</strong>：模板方法、策略模式、工厂模式</li>
+<li><strong>异常处理完善</strong>：全面的异常处理和日志记录</li>
+<li><strong>配置灵活</strong>：支持多LLM提供商、多环境配置</li>
+<li><strong>文档完善</strong>：详细的代码注释和项目文档</li>
+</ol>
+<h3 id="7-3-业务亮点"><a href="#7-3-业务亮点" class="headerlink" title="7.3 业务亮点"></a>7.3 业务亮点</h3><ol>
+<li><strong>功能完整</strong>：涵盖质量、安全、性能多个维度</li>
+<li><strong>分析专业</strong>：结合静态分析和LLM深度分析</li>
+<li><strong>建议实用</strong>：提供具体的改进建议和代码示例</li>
+<li><strong>用户体验好</strong>：清晰的报告格式，易于理解</li>
+</ol>
+<hr>
+<h2 id="八、项目改进方向"><a href="#八、项目改进方向" class="headerlink" title="八、项目改进方向"></a>八、项目改进方向</h2><h3 id="8-1-短期改进（可实现）"><a href="#8-1-短期改进（可实现）" class="headerlink" title="8.1 短期改进（可实现）"></a>8.1 短期改进（可实现）</h3><ol>
+<li><strong>结果缓存</strong>：Redis缓存审查结果</li>
+<li><strong>异步处理</strong>：支持大型代码库的异步审查</li>
+<li><strong>知识库扩展</strong>：从数据库动态加载知识</li>
+<li><strong>Parser层抽象</strong>：统一LLM输出解析</li>
+</ol>
+<h3 id="8-2-长期改进（架构升级）"><a href="#8-2-长期改进（架构升级）" class="headerlink" title="8.2 长期改进（架构升级）"></a>8.2 长期改进（架构升级）</h3><ol>
+<li><strong>配置化编排</strong>：通过配置驱动Agent编排</li>
+<li><strong>多路召回</strong>：向量检索 + 关键词检索 + 规则检索</li>
+<li><strong>记忆能力</strong>：用户偏好、历史记录</li>
+<li><strong>实验平台</strong>：A&#x2F;B测试、指标监控</li>
+<li><strong>前端界面</strong>：可视化编排、实时监控</li>
+</ol>
+<hr>
+<h2 id="九、面试准备建议"><a href="#九、面试准备建议" class="headerlink" title="九、面试准备建议"></a>九、面试准备建议</h2><h3 id="9-1-项目讲解顺序"><a href="#9-1-项目讲解顺序" class="headerlink" title="9.1 项目讲解顺序"></a>9.1 项目讲解顺序</h3><ol>
+<li><p><strong>项目概述</strong>（1-2分钟）</p>
+<ul>
+<li>项目背景、解决的问题、核心功能</li>
+</ul>
+</li>
+<li><p><strong>技术架构</strong>（2-3分钟）</p>
+<ul>
+<li>整体架构、技术选型、设计模式</li>
+</ul>
+</li>
+<li><p><strong>核心模块</strong>（3-5分钟）</p>
+<ul>
+<li>Agent层、Tool层、RAG层、Service层</li>
+</ul>
+</li>
+<li><p><strong>关键技术点</strong>（2-3分钟）</p>
+<ul>
+<li>Multi-Agent架构、RAG实现、并行执行</li>
+</ul>
+</li>
+<li><p><strong>项目亮点</strong>（1-2分钟）</p>
+<ul>
+<li>技术亮点、工程亮点、业务亮点</li>
+</ul>
+</li>
+</ol>
+<h3 id="9-2-重点准备的问题"><a href="#9-2-重点准备的问题" class="headerlink" title="9.2 重点准备的问题"></a>9.2 重点准备的问题</h3><ol>
+<li><strong>为什么选择Multi-Agent架构？</strong></li>
+<li><strong>如何实现Agent的并行执行？</strong></li>
+<li><strong>RAG是如何实现的？</strong></li>
+<li><strong>Tool调用是如何实现的？</strong></li>
+<li><strong>如何添加新的Agent？</strong></li>
+<li><strong>项目有哪些性能优化点？</strong></li>
+<li><strong>如何处理LLM的响应时间较长的问题？</strong></li>
+</ol>
+<h3 id="9-3-回答技巧"><a href="#9-3-回答技巧" class="headerlink" title="9.3 回答技巧"></a>9.3 回答技巧</h3><ol>
+<li><strong>结构化回答</strong>：问题 → 方案 → 实现 → 效果</li>
+<li><strong>代码示例</strong>：准备关键代码片段</li>
+<li><strong>数据支撑</strong>：准备性能数据、效果数据</li>
+<li><strong>思考过程</strong>：展示设计思路和权衡</li>
+<li><strong>改进方向</strong>：展示对项目的深入思考</li>
+</ol>
+<hr>
+<h2 id="十、总结"><a href="#十、总结" class="headerlink" title="十、总结"></a>十、总结</h2><p>这个项目展示了以下能力：</p>
+<ol>
+<li><strong>架构设计能力</strong>：Multi-Agent架构、分层设计</li>
+<li><strong>技术实现能力</strong>：RAG、Tool调用、并行执行</li>
+<li><strong>工程实践能力</strong>：代码规范、异常处理、文档完善</li>
+<li><strong>问题解决能力</strong>：性能优化、扩展性设计</li>
+<li><strong>学习能力</strong>：LangChain4j、Ollama等新技术</li>
+</ol>
+<p><strong>适合面试场景：</strong></p>
+<ul>
+<li>Agent开发相关岗位</li>
+<li>AI应用开发岗位</li>
+<li>后端开发岗位（有AI背景）</li>
+</ul>
+<p><strong>项目优势：</strong></p>
+<ul>
+<li>技术栈前沿（LangChain4j、RAG、Multi-Agent）</li>
+<li>架构清晰（易于理解和扩展）</li>
+<li>功能完整（涵盖多个维度）</li>
+<li>代码质量高（设计模式、异常处理）</li>
+</ul>
+<hr>
+<h2 id="附录：关键代码片段"><a href="#附录：关键代码片段" class="headerlink" title="附录：关键代码片段"></a>附录：关键代码片段</h2><h3 id="A-Agent并行执行"><a href="#A-Agent并行执行" class="headerlink" title="A. Agent并行执行"></a>A. Agent并行执行</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Map&lt;String, AgentResult&gt; <span class="hljs-title function_">orchestrateReview</span><span class="hljs-params">(AgentTask task, String reviewType)</span> &#123;<br>    Map&lt;String, AgentResult&gt; results = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>    List&lt;CompletableFuture&lt;Void&gt;&gt; futures = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>    <br>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;all&quot;</span>.equals(reviewType) || <span class="hljs-string">&quot;quality&quot;</span>.equals(reviewType)) &#123;<br>        CompletableFuture&lt;Void&gt; future = CompletableFuture.runAsync(() -&gt; &#123;<br>            <span class="hljs-type">AgentResult</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> codeAnalysisAgent.execute(task);<br>            <span class="hljs-keyword">synchronized</span> (results) &#123;<br>                results.put(<span class="hljs-string">&quot;quality&quot;</span>, result);<br>            &#125;<br>        &#125;, executorService);<br>        futures.add(future);<br>    &#125;<br>    <br>    CompletableFuture.allOf(futures.toArray(<span class="hljs-keyword">new</span> <span class="hljs-title class_">CompletableFuture</span>[<span class="hljs-number">0</span>])).join();<br>    <span class="hljs-keyword">return</span> results;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="B-RAG检索"><a href="#B-RAG检索" class="headerlink" title="B. RAG检索"></a>B. RAG检索</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> String <span class="hljs-title function_">retrieveRelevantKnowledge</span><span class="hljs-params">(String code, String reviewType)</span> &#123;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">query</span> <span class="hljs-operator">=</span> buildQuery(code, reviewType);<br>    <span class="hljs-type">Embedding</span> <span class="hljs-variable">queryEmbedding</span> <span class="hljs-operator">=</span> embeddingModel.embed(query).content();<br>    List&lt;EmbeddingMatch&lt;TextSegment&gt;&gt; matches = embeddingStore.findRelevant(<br>        queryEmbedding, <span class="hljs-number">3</span><br>    );<br>    <span class="hljs-keyword">return</span> matches.stream()<br>        .map(match -&gt; match.embedded().text())<br>        .collect(Collectors.joining(<span class="hljs-string">&quot;\n\n&quot;</span>));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="C-Agent执行流程"><a href="#C-Agent执行流程" class="headerlink" title="C. Agent执行流程"></a>C. Agent执行流程</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> AgentResult <span class="hljs-title function_">execute</span><span class="hljs-params">(AgentTask task)</span> &#123;<br>    <span class="hljs-comment">// 1. Tool分析</span><br>    <span class="hljs-type">CodeStructure</span> <span class="hljs-variable">structure</span> <span class="hljs-operator">=</span> codeAnalysisTool.analyzeJavaCode(task.getCode());<br>    <br>    <span class="hljs-comment">// 2. RAG检索</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">knowledge</span> <span class="hljs-operator">=</span> knowledgeBaseService.retrieveRelevantKnowledge(<br>        task.getCode(), <span class="hljs-string">&quot;quality&quot;</span><br>    );<br>    <br>    <span class="hljs-comment">// 3. LLM分析</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">prompt</span> <span class="hljs-operator">=</span> buildAnalysisPrompt(code, structure, knowledge);<br>    <span class="hljs-type">String</span> <span class="hljs-variable">llmAnalysis</span> <span class="hljs-operator">=</span> callLLM(prompt);<br>    <br>    <span class="hljs-comment">// 4. 返回结果</span><br>    <span class="hljs-keyword">return</span> AgentResult.builder()<br>        .analysis(llmAnalysis)<br>        .score(calculateScore(structure))<br>        .build();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/LLM/" class="category-chain-item">LLM</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>RAG项目实践——代码审查助手</div>
+      <div>http://example.com/2025/11/26/RAG项目实践——代码审查助手/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hejiaman</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年11月26日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/10/12/RPC%E7%9B%B8%E5%85%B3%E5%AD%A6%E4%B9%A0/" title="RPC相关学习">
+                        <span class="hidden-mobile">RPC相关学习</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
